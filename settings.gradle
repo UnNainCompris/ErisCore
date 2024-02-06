@@ -1,3 +1,4 @@
 rootProject.name = 'ErisUtils'
 include 'api'
+include 'NMS_1_20_R1'
 
