@@ -2,7 +2,10 @@ package fr.eris.erisutils.manager.debugger.object;
 
 import fr.eris.erisutils.ErisCore;
 import fr.eris.erisutils.manager.debugger.config.YamlDebuggerConfig;
+import fr.eris.erisutils.manager.nms.NmsAdaptaterManager;
 import fr.eris.erisutils.utils.ColorUtils;
+
+import java.util.UUID;
 
 public class Debugger {
 
@@ -28,9 +31,8 @@ public class Debugger {
 
     public void debug(String toDebug) {
         if(!isEnable) return;
-
-        ErisCore.getInstance().getLogger().info(ColorUtils.translateColor(
-                format.replace("%prefix%", prefix)
+        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
+                ColorUtils.translateColor(format.replace("%prefix%", prefix)
                         .replace("%message%", toDebug)));
     }
 

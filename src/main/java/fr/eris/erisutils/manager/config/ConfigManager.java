@@ -25,8 +25,8 @@ public class ConfigManager extends Manager<ErisCore> {
     public void attemptSaving(long currentTick) {
         for(IData currentData : loadedData) {
             long normalizedLastSaveTick = currentTick - currentData.lastAutoSaveTick;
-            if(currentData.autoSaveDelay / normalizedLastSaveTick >= 1 ||
-                    currentData.autoSaveDelay / (normalizedLastSaveTick + taskRepeatDelay) > 1) {
+            if(normalizedLastSaveTick == 0 || (currentData.autoSaveDelay / normalizedLastSaveTick) >= 1 ||
+                    (currentData.autoSaveDelay / (normalizedLastSaveTick + taskRepeatDelay)) > 1) {
                 currentData.save();
                 currentData.lastAutoSaveTick = currentTick;
             }

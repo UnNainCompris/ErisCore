@@ -1,4 +1,4 @@
 name: ErisUtils
 version: '${version}'
-main: fr.eris.erisutils.ErisUtils
+main: fr.eris.erisutils.ErisCore
 api-version: '1.20'

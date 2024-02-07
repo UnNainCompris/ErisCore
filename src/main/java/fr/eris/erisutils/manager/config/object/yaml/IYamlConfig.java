@@ -11,6 +11,7 @@ public abstract class IYamlConfig extends IData {
     private YamlConfiguration yaml;
 
     public IYamlConfig() {
+        yaml = new YamlConfiguration();
         if(!FileUtils.isExist(getSaveDirectory(), getSaveFileName())) {
             loadDefaultConfig();
         } else {
