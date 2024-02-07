@@ -4,6 +4,7 @@ import fr.eris.erisutils.ErisCore;
 import fr.eris.erisutils.manager.debugger.config.YamlDebuggerConfig;
 import fr.eris.erisutils.manager.nms.NmsAdaptaterManager;
 import fr.eris.erisutils.utils.ColorUtils;
+import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -31,9 +32,18 @@ public class Debugger {
 
     public void debug(String toDebug) {
         if(!isEnable) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(format.replace("%prefix%", prefix)
-                        .replace("%message%", toDebug)));
+        Bukkit.getLogger().info(
+            ColorUtils.translateColor(format.replace("%prefix%", prefix)
+                      .replace("%message%", toDebug)));
+
+        NmsAdaptaterManager.getNmsSupport().test();
+        NmsAdaptaterManager.getNmsSupport().test();
+        NmsAdaptaterManager.getNmsSupport().test();
+        NmsAdaptaterManager.getNmsSupport().test();
+        NmsAdaptaterManager.getNmsSupport().test();
+        NmsAdaptaterManager.getNmsSupport().test();
+
+        ErisCore.getInstance().getServer().getConsoleSender().sendMessage("Test", "test");
     }
 
     public static Debugger getDebugger(String debuggerName) {
