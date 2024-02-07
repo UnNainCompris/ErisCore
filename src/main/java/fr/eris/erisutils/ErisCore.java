@@ -9,20 +9,25 @@ import fr.eris.erisutils.utils.manager.Priority;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class ErisCore extends JavaPlugin {
+public abstract class ErisCore extends JavaPlugin {
 
     @Getter public static ErisCore instance;
 
     @ManagerPriority(init = Priority.HIGHEST) @Getter private static DebuggerManager debuggerManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static ConfigManager configManager;
 
-    public void onEnable() {
+    public abstract void start();
+    public abstract void stop();
+
+    public final void onEnable() {
         instance = this;
         FileCache.setupFile();
         ManagerEnabler.init(this);
+        start();
     }
 
-    public void onDisable() {
-        // Plugin shutdown logic
+    public final void onDisable() {
+        ManagerEnabler.stop(this);
+        stop();
     }
 }
