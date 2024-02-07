@@ -2,27 +2,27 @@ package fr.eris.erisutils.utils.task;
 
 public class TaskUtils {
 
-    public static ErisTask sync(Runnable todo) {
+    public static ErisTask sync(ErisTask.ErisTaskAction todo) {
         return new ErisTask(todo, false).start();
     }
 
-    public static ErisTask syncLater(Runnable todo, long startDelay) {
+    public static ErisTask syncLater(ErisTask.ErisTaskAction todo, long startDelay) {
         return new ErisTask(todo, false, startDelay).start();
     }
 
-    public static ErisTask syncRepeat(Runnable todo, long startDelay, long repeatDelay) {
+    public static ErisTask syncRepeat(ErisTask.ErisTaskAction todo, long startDelay, long repeatDelay) {
         return new ErisTask(todo, false, startDelay, repeatDelay).start();
     }
 
-    public static ErisTask async(Runnable todo) {
+    public static ErisTask async(ErisTask.ErisTaskAction todo) {
         return new ErisTask(todo, true).start();
     }
 
-    public static ErisTask asyncLater(Runnable todo, long startDelay) {
+    public static ErisTask asyncLater(ErisTask.ErisTaskAction todo, long startDelay) {
         return new ErisTask(todo, true, startDelay).start();
     }
 
-    public static ErisTask asyncRepeat(Runnable todo, long startDelay, long repeatDelay) {
+    public static ErisTask asyncRepeat(ErisTask.ErisTaskAction todo, long startDelay, long repeatDelay) {
         return new ErisTask(todo, true, startDelay, repeatDelay).start();
     }
 }

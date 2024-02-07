@@ -1,28 +1,31 @@
 package fr.eris.erisutils.utils.task;
 
 import fr.eris.erisutils.ErisCore;
+import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ErisTask extends BukkitRunnable {
 
-    private final Runnable todo;
-    private Runnable cancelAction;
+    private final ErisTaskAction todo;
+    private ErisTaskAction cancelAction;
     private final boolean async;
     private final long repeatDelayTick, startDelayTick;
 
-    public ErisTask(Runnable run, boolean isAsync) {
+    @Getter private long tickSinceStart;
+
+    public ErisTask(ErisTaskAction run, boolean isAsync) {
         this(run, null, isAsync, -1, -1);
     }
 
-    public ErisTask(Runnable run, boolean isAsync, long startDelayTick) {
+    public ErisTask(ErisTaskAction run, boolean isAsync, long startDelayTick) {
         this(run, null, isAsync, startDelayTick, -1);
     }
 
-    public ErisTask(Runnable run, boolean isAsync, long startDelayTick, long repeatDelayTick) {
+    public ErisTask(ErisTaskAction run, boolean isAsync, long startDelayTick, long repeatDelayTick) {
         this(run, null, isAsync, startDelayTick, repeatDelayTick);
     }
 
-    public ErisTask(Runnable todo, Runnable cancelAction, boolean isAsync, long startDelayTick, long repeatDelayTick) {
+    public ErisTask(ErisTaskAction todo, ErisTaskAction cancelAction, boolean isAsync, long startDelayTick, long repeatDelayTick) {
         if(todo == null) {
             throw new IllegalArgumentException("A todo action cannot be null in ErisTask !");
         }
@@ -34,7 +37,8 @@ public class ErisTask extends BukkitRunnable {
     }
 
     public void run() {
-        todo.run();
+        todo.call(this);
+        tickSinceStart += 1;
     }
 
     public synchronized void cancel() {
@@ -44,7 +48,7 @@ public class ErisTask extends BukkitRunnable {
 
     protected void onCancel() {
         if(cancelAction != null)
-            cancelAction.run();
+            cancelAction.call(this);
     }
 
     public ErisTask start() {
@@ -60,8 +64,12 @@ public class ErisTask extends BukkitRunnable {
         return this;
     }
 
-    public ErisTask setCancelAction(Runnable newCancelAction) {
+    public ErisTask setCancelAction(ErisTaskAction newCancelAction) {
         this.cancelAction = newCancelAction;
         return this;
+    }
+
+    public interface ErisTaskAction {
+        void call(ErisTask executionTask);
     }
 }
