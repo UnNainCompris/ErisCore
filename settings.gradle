@@ -1,4 +1,4 @@
-rootProject.name = 'ErisUtils'
+rootProject.name = 'ErisCore'
 include 'NmsModule:api'
 findProject(':NmsModule:api')?.name = 'api'
 include 'NmsModule:NMS_1_20_R1'
