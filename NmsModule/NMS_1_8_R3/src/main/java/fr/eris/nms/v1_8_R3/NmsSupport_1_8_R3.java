@@ -8,9 +8,6 @@ public class NmsSupport_1_8_R3 extends NmsSupport {
 
     public void test() {
 
-        Bukkit.getLogger().info( Ansi.ansi().a(Ansi.Attribute.RESET).fg(Ansi.Color.BLUE).boldOff().toString() + Bukkit.getServer().getConsoleSender().getClass().getName() + " !");
-        Bukkit.getServer().getConsoleSender().sendMessage("\033[F\r" + this.getClass().getName() + " !2222");
-        System.out.println("test " + Ansi.ansi().reset().toString());
     }
 
 }
