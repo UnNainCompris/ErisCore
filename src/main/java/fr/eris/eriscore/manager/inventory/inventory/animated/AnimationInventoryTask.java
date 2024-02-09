@@ -3,8 +3,7 @@ package fr.eris.eriscore.manager.inventory.inventory.animated;
 import fr.eris.eriscore.manager.inventory.inventory.animated.animation.IAnimation;
 import fr.eris.eriscore.utils.task.ErisTask;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 public class AnimationInventoryTask extends ErisTask {
 
@@ -15,9 +14,18 @@ public class AnimationInventoryTask extends ErisTask {
         if(attachedInventory == null)
             throw new IllegalArgumentException("Inventory cannot be null");
         this.attachedInventory = attachedInventory;
+        this.setAction(this::animate);
     }
 
     public void animate(ErisTask executionTask) {
+        // creating a new list to avoid concurrent modification error. (Because we work in Async)
+        for(IAnimation animation : new ArrayList<>(attachedInventory.getAnimations())) {
+            animation.process(executionTask.getTickSinceStart());
+        }
+        attachedInventory.updateInventory();
+    }
 
+    public void removeAnimation(IAnimation animationToRemove) {
+        animationToRemove.onStopAnimation(attachedInventory, this.getTickSinceStart());
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class ErisAnimatedInventory extends ErisInventory {
 
     @Getter private final List<IAnimation> animations;
+    private AnimationInventoryTask animationTask;
 
     public ErisAnimatedInventory(Player target, String inventoryName, int inventoryRowAmount) {
         this(target, inventoryName, inventoryRowAmount, null);
@@ -22,10 +23,16 @@ public abstract class ErisAnimatedInventory extends ErisInventory {
                                  ErisInventoryHolder inventoryHolder) {
         super(target, inventoryName, inventoryRowAmount, inventoryHolder);
         this.animations = new ArrayList<>();
+        this.animationTask = new AnimationInventoryTask(this);
     }
 
     public void registerAnimations(IAnimation... newAnimations) {
         if(newAnimations == null) return;
         animations.addAll(Arrays.asList(newAnimations));
+    }
+
+    public void unRegisterAnimation(IAnimation animationToRemove) {
+        animations.remove(animationToRemove);
+        animationTask.removeAnimation(animationToRemove);
     }
 }

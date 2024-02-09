@@ -60,6 +60,7 @@ public abstract class ErisInventory implements Listener {
     }
 
     public void createInventory() {
+        closeInventory();
         this.inventory = Bukkit.createInventory(inventoryHolder,
                 getRealInventorySize(), ColorUtils.translateColor(inventoryName));
     }
