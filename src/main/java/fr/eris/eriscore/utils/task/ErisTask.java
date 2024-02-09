@@ -2,11 +2,12 @@ package fr.eris.eriscore.utils.task;
 
 import fr.eris.eriscore.ErisCore;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ErisTask extends BukkitRunnable {
 
-    private final ErisTaskAction todo;
+    private ErisTaskAction todo;
     private ErisTaskAction cancelAction;
     private final boolean async;
     private final long repeatDelayTick, startDelayTick;
@@ -26,9 +27,6 @@ public class ErisTask extends BukkitRunnable {
     }
 
     public ErisTask(ErisTaskAction todo, ErisTaskAction cancelAction, boolean isAsync, long startDelayTick, long repeatDelayTick) {
-        if(todo == null) {
-            throw new IllegalArgumentException("A todo action cannot be null in ErisTask !");
-        }
         this.todo = todo;
         this.cancelAction = cancelAction;
         this.async = isAsync;
@@ -37,7 +35,8 @@ public class ErisTask extends BukkitRunnable {
     }
 
     public void run() {
-        todo.call(this);
+        if(todo != null)
+            todo.call(this);
         tickSinceStart += 1;
     }
 
@@ -66,6 +65,11 @@ public class ErisTask extends BukkitRunnable {
 
     public ErisTask setCancelAction(ErisTaskAction newCancelAction) {
         this.cancelAction = newCancelAction;
+        return this;
+    }
+
+    public ErisTask setAction(ErisTaskAction newAction) {
+        this.todo = newAction;
         return this;
     }
 

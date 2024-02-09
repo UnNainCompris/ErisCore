@@ -1,10 +1,12 @@
 package fr.eris.eriscore.manager.inventory.inventory;
 
+import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public class ErisInventoryHolder implements InventoryHolder {
 
+    @Getter
     private final ErisInventory attachInventory;
 
     public ErisInventoryHolder(ErisInventory attachInventory) {
@@ -12,6 +14,10 @@ public class ErisInventoryHolder implements InventoryHolder {
     }
 
     public Inventory getInventory() {
-        return null;
+        return attachInventory.getInventory();
+    }
+
+    public boolean equals(ErisInventory otherInventory) {
+        return otherInventory.equals(attachInventory);
     }
 }
