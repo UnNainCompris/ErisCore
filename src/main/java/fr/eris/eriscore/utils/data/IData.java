@@ -37,9 +37,15 @@ public abstract class IData {
     protected abstract void saveData();
 
     public final void save() {
+        if(asyncSaving) TaskUtils.async((task) -> processSaving());
+        else TaskUtils.sync((task) -> processSaving());
+    }
+
+    private void processSaving() {
+        long startSaveTime = System.currentTimeMillis();
+        saveData();
         Debugger.getDebugger("ErisCore")
-                .info("Saving " + getSaveFileName() + " at " + getSaveDirectory().getAbsolutePath() + " ! {async: " + asyncSaving + "}");
-        if(asyncSaving) TaskUtils.async((task) -> saveData());
-        else TaskUtils.sync((task) -> saveData());
+                .info("Saved " + getSaveFileName() + " at " + getSaveDirectory().getAbsolutePath() + " in "
+                        + (System.currentTimeMillis() - startSaveTime) + " ms! {async: " + asyncSaving + "}");
     }
 }

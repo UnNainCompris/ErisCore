@@ -7,8 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public interface ClickAction {
 
-    @Getter
-        record ClickActionData(InventoryClickEvent event, ErisInventory inventory, ErisInventoryHolder inventoryHolder, ErisInventoryItem clickedItem) {
+    record ClickActionData(InventoryClickEvent event, ErisInventory inventory, ErisInventoryHolder inventoryHolder, ErisInventoryItem clickedItem) {
     }
 
     void onClick(ClickActionData data);
