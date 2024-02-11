@@ -3,31 +3,14 @@ package fr.eris.eriscore;
 import fr.eris.eriscore.manager.command.CommandManager;
 import fr.eris.eriscore.manager.config.ConfigManager;
 import fr.eris.eriscore.manager.debugger.DebuggerManager;
-import fr.eris.eriscore.manager.debugger.object.DebugType;
-import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.language.LanguageManager;
 import fr.eris.eriscore.manager.nms.NmsAdaptaterManager;
-import fr.eris.eriscore.nms.api.NmsSupport;
 import fr.eris.eriscore.utils.file.FileCache;
 import fr.eris.eriscore.utils.manager.ManagerEnabler;
 import fr.eris.eriscore.utils.manager.ManagerPriority;
 import fr.eris.eriscore.utils.manager.Priority;
-import fr.eris.eriscore.utils.task.TaskUtils;
-import io.prometheus.metrics.core.metrics.Counter;
-import io.prometheus.metrics.exporter.httpserver.HTTPServer;
-import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
-import io.prometheus.metrics.model.snapshots.Unit;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 public class ErisCore extends JavaPlugin {
 
