@@ -2,7 +2,7 @@ package fr.eris.eriscore.manager.nms.object;
 
 import fr.eris.eriscore.nms.api.NmsSupport;
 import fr.eris.eriscore.nms.v1_20_R1.NmsSupport_1_20_R1;
-import fr.eris.nms.v1_8_R3.NmsSupport_1_8_R3;
+import fr.eris.eriscore.nms.v1_8_R3.NmsSupport_1_8_R3;
 import lombok.Getter;
 
 public enum Version {
@@ -13,11 +13,11 @@ public enum Version {
 
 
     public static Version findVersion(String serverBukkitVersion) {
-        return switch (serverBukkitVersion) {
-            case "1.8.8-R0.1-SNAPSHOT" -> v1_8_R3;
-            case "1.20.1-R0.1-SNAPSHOT" -> v1_20_R1;
-            default -> NOT_FOUND;
-        };
+        if (serverBukkitVersion.equals("1.8.8-R0.1-SNAPSHOT"))
+            return v1_8_R3;
+        if (serverBukkitVersion.equals("1.20.1-R0.1-SNAPSHOT"))
+            return v1_20_R1;
+        return NOT_FOUND;
     }
 
     private final Class<? extends NmsSupport> nmsSupportClass;

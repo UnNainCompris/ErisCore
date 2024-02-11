@@ -12,9 +12,15 @@ import fr.eris.eriscore.utils.file.FileCache;
 import fr.eris.eriscore.utils.manager.ManagerEnabler;
 import fr.eris.eriscore.utils.manager.ManagerPriority;
 import fr.eris.eriscore.utils.manager.Priority;
+import fr.eris.eriscore.utils.task.TaskUtils;
+import io.prometheus.metrics.core.metrics.Counter;
+import io.prometheus.metrics.exporter.httpserver.HTTPServer;
+import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
+import io.prometheus.metrics.model.snapshots.Unit;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -32,9 +38,30 @@ public class ErisCore extends JavaPlugin {
     @ManagerPriority(init = Priority.HIGH) @Getter private static LanguageManager languageManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static ConfigManager configManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static CommandManager commandManager;
+    public void start() {
+        try {
+            Debugger.getDebugger("ErisCore").info("Here the start of the server !");
+            JvmMetrics.builder().register();
+            Counter counter = Counter.builder()
+                    .name("uptime_seconds_total")
+                    .help("total number of seconds since this application was started")
+                    .unit(Unit.SECONDS)
+                    .register();
+            HTTPServer httpServer = HTTPServer.builder().port(8081).buildAndStart();
+            counter.inc(1);
+            /*TaskUtils.asyncRepeat((erisTask) -> {
+                counter.inc(1);
+                Debugger.getDebugger("ErisCore").info("inc " + counter.getPrometheusName());
+            }, 0L, 1L);*/
+            Debugger.getDebugger("ErisCore").info("Here the end of the server !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    public void start(){}
-    public void stop(){}
+    }
+    public void stop() {
+
+    }
 
     public final void onEnable() {
         instance = this;

@@ -1,4 +1,4 @@
-package fr.eris.nms.v1_8_R3;
+package fr.eris.eriscore.nms.v1_8_R3;
 
 import fr.eris.eriscore.nms.api.NmsSupport;
 import org.apache.logging.log4j.Level;
