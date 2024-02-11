@@ -39,25 +39,6 @@ public class ErisCore extends JavaPlugin {
     @ManagerPriority(init = Priority.NORMAL) @Getter private static ConfigManager configManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static CommandManager commandManager;
     public void start() {
-        try {
-            Debugger.getDebugger("ErisCore").info("Here the start of the server !");
-            JvmMetrics.builder().register();
-            Counter counter = Counter.builder()
-                    .name("uptime_seconds_total")
-                    .help("total number of seconds since this application was started")
-                    .unit(Unit.SECONDS)
-                    .register();
-            HTTPServer httpServer = HTTPServer.builder().port(8081).buildAndStart();
-            counter.inc(1);
-            /*TaskUtils.asyncRepeat((erisTask) -> {
-                counter.inc(1);
-                Debugger.getDebugger("ErisCore").info("inc " + counter.getPrometheusName());
-            }, 0L, 1L);*/
-            Debugger.getDebugger("ErisCore").info("Here the end of the server !");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
     public void stop() {
 
