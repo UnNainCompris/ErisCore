@@ -12,7 +12,6 @@ public class AnimationInventoryTask extends ErisTask {
 
     public AnimationInventoryTask(ErisAnimatedInventory attachedInventory) {
         super(null, true, 0, 1);
-        Debugger.getDebugger("ErisCore").test("Create Animate !");
         if(attachedInventory == null)
             throw new IllegalArgumentException("Inventory cannot be null");
         this.attachedInventory = attachedInventory;
@@ -21,15 +20,18 @@ public class AnimationInventoryTask extends ErisTask {
     }
 
     public void animate(ErisTask executionTask) {
-        Debugger.getDebugger("ErisCore").test("Animate !");
         // creating a new list to avoid concurrent modification error. (Because we work in Async)
+        boolean anyProcessed = false;
+        attachedInventory.updateAnimation();
         for(IAnimation animation : new ArrayList<>(attachedInventory.getAnimations())) {
-            animation.process(executionTask.getTickSinceStart());
+            if(animation.process(executionTask.getTickSinceStart())) anyProcessed = true;
         }
-        attachedInventory.updateInventory();
+        if(anyProcessed)
+            attachedInventory.updateInventory();
     }
 
     public void removeAnimation(IAnimation animationToRemove) {
         animationToRemove.onStopAnimation(attachedInventory, this.getTickSinceStart());
+        animationToRemove.isCancelled = true;
     }
 }

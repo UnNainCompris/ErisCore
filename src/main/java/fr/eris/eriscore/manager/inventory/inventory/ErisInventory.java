@@ -1,6 +1,7 @@
 package fr.eris.eriscore.manager.inventory.inventory;
 
 import fr.eris.eriscore.ErisCore;
+import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.item.ClickAction;
 import fr.eris.eriscore.manager.inventory.item.ErisInventoryItem;
 import fr.eris.eriscore.manager.inventory.item.ItemUpdater;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -24,13 +26,14 @@ import java.util.UUID;
  */
 public abstract class ErisInventory implements Listener {
 
-    @Getter private Inventory inventory;
-    private ErisInventoryHolder inventoryHolder;
-    private Player viewers;
+    @Getter protected Inventory inventory;
+    protected ErisInventoryHolder inventoryHolder;
+    protected Player viewers;
     @Getter private int inventoryRowAmount;
     private String inventoryName;
     private final HashMap<Integer, ErisInventoryItem> inventoryContent;
     private final UUID activeId;
+    private boolean destroying = false;
 
     public ErisInventory(Player target, String inventoryName, int inventoryRowAmount) {
         this(target, inventoryName, inventoryRowAmount, null);
@@ -111,22 +114,36 @@ public abstract class ErisInventory implements Listener {
                 ((ErisInventoryHolder) otherInventory.getHolder()).equals(this);
     }
 
+    public void destroy() {
+        destroying = true;
+        viewers.closeInventory();
+        HandlerList.unregisterAll(this);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if(!isSimilar(event.getInventory())) return;
+        int clickedSlot = event.getSlot();
+        if(inventoryContent.containsKey(clickedSlot)) {
+            ErisInventoryItem item = inventoryContent.get(clickedSlot);
+            if(item.getClickAction() != null)
+                item.getClickAction().onClick(new ClickAction.ClickActionData(event, this, inventoryHolder, item));
+        }
         onClicked(event);
     }
 
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         if(!isSimilar(event.getInventory())) return;
-        onClosed(event);
+        if(!destroying)
+            onClosed(event);
     }
 
     @EventHandler
     public void onInventoryOpenEvent(InventoryOpenEvent event) {
         if(!isSimilar(event.getInventory())) return;
-        onOpened(event);
+        if(!destroying)
+            onOpened(event);
     }
 
     public abstract void onClicked(InventoryClickEvent event);

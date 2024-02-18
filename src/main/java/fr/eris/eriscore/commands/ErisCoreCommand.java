@@ -37,20 +37,26 @@ public class ErisCoreCommand extends IErisCommand {
         TestInventory newInv = new TestInventory(player);
         newInv.openInventory();
         newInv.registerAnimations(new IAnimation() {
+
             public void onStartAnimation(ErisAnimatedInventory erisInventory, long deltaTick) {
-                Debugger.getDebugger("ErisCore").test("Start animation");
-                erisInventory.setItem(1, (player) -> ItemBuilder.create().setMaterial(Material.GOLDEN_APPLE).build());
+                addAnimationStep((player) -> ItemBuilder.air().setMaterial(Material.GOLDEN_APPLE).build(),
+                        9, 200);
             }
 
             public void onStopAnimation(ErisAnimatedInventory erisInventory, long deltaTick) {
-                Debugger.getDebugger("ErisCore").test("Stop animation");
-                erisInventory.setItem(10, (player) -> ItemBuilder.create().setMaterial(Material.GOLDEN_APPLE).build());
+                addAnimationStep((player) -> ItemBuilder.air().setMaterial(Material.GOLDEN_APPLE).build(),
+                        17, 200);
             }
-
+            int counter = 0;
             public void processAnimation(ErisAnimatedInventory erisInventory, long deltaTick) {
-                Debugger.getDebugger("ErisCore").test("Process animation");
-                erisInventory.setItem((int)(deltaTick % 40), (player) -> ItemBuilder.create().setMaterial(Material.STICK).build());
-
+                if(counter == 9) counter = 0;
+                addAnimationStep((player) -> ItemBuilder.air().setMaterial(Material.STICK).build(),
+                        (clickData) -> {
+                            Debugger.getDebugger("ErisCore").info("GetClicked!");
+                            clickData.getEvent().setCancelled(true);
+                        },
+                        counter, 5);
+                counter += 1;
             }
         });
     }

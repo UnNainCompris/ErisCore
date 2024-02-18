@@ -14,9 +14,7 @@ public class ItemBuilder {
         return itemBuilder;
     }
 
-
-
-    public static ItemBuilder create() {
+    public static ItemBuilder air() {
         ItemBuilder itemBuilder = new ItemBuilder();
         itemBuilder.itemStack = new ItemStack(Material.AIR);
         return itemBuilder;

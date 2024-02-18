@@ -24,15 +24,13 @@ public abstract class IErisCommand extends BukkitCommand {
     private boolean canRegister = true;
 
     public IErisCommand(String name, AvailableSender availableSender, String permission, List<String> aliases) {
-        super(name);
+        super(name, "", "", aliases == null ? Collections.emptyList() : aliases);
 
         this.subCommands = new HashMap<>();
         this.registeredArgument = new ArrayList<>();
 
         setPermission(permission == null ? "" : permission);
         this.availableSender = availableSender;
-        if(aliases != null)
-            setAliases(aliases);
 
         TaskUtils.asyncLater((task) -> {
             registerSubCommand();

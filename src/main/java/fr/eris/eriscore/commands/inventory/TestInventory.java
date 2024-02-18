@@ -5,6 +5,7 @@ import fr.eris.eriscore.utils.bukkit.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class TestInventory extends ErisAnimatedInventory {
         //}
     }
 
-    public void onClicked(InventoryClickEvent event) {
-
+    public void onClosed(InventoryCloseEvent event) {
+        destroy();
     }
 }

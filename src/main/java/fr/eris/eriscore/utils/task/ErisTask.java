@@ -35,9 +35,10 @@ public class ErisTask extends BukkitRunnable {
     }
 
     public void run() {
-        if(todo != null)
+        if(todo != null) {
+            tickSinceStart += 1;
             todo.call(this);
-        tickSinceStart += 1;
+        }
     }
 
     public synchronized void cancel() {

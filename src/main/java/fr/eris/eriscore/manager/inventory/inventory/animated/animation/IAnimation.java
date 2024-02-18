@@ -3,6 +3,10 @@ package fr.eris.eriscore.manager.inventory.inventory.animated.animation;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventory;
 import fr.eris.eriscore.manager.inventory.inventory.animated.AnimationInventoryTask;
 import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimatedInventory;
+import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimationData;
+import fr.eris.eriscore.manager.inventory.item.ClickAction;
+import fr.eris.eriscore.manager.inventory.item.ErisInventoryItem;
+import fr.eris.eriscore.manager.inventory.item.ItemUpdater;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,14 +23,30 @@ public abstract class IAnimation {
         tickExecutionSpan = newTickExecutionSpan;
     }
 
-    public void process(long deltaTick) {
-        if(isCancelled) return;
+    public boolean process(long deltaTick) {
+        if(isCancelled) return false;
         if(executionCount == 0)
             onStartAnimation(attachedInventory, deltaTick);
-        if(deltaTick - lastExecutionTick <= tickExecutionSpan) return;
+        if(deltaTick - lastExecutionTick < tickExecutionSpan) return false;
         executionCount += 1;
-        lastExecutionTick = deltaTick;
         processAnimation(attachedInventory, deltaTick);
+        lastExecutionTick = deltaTick;
+
+        return true;
+    }
+
+    public void addAnimationStep(ItemUpdater itemUpdater, ClickAction clickAction,
+                                 int displaySlot, long maxLiveTick) {
+        ErisAnimationData animationData = new ErisAnimationData(ErisInventoryItem.create(itemUpdater, clickAction), displaySlot,
+                this, maxLiveTick);
+        attachedInventory.registerAnimationStep(animationData);
+    }
+
+    public void addAnimationStep(ItemUpdater itemUpdater,
+                                 int displaySlot, long maxLiveTick) {
+        ErisAnimationData animationData = new ErisAnimationData(ErisInventoryItem.create(itemUpdater), displaySlot,
+                this, maxLiveTick);
+        attachedInventory.registerAnimationStep(animationData);
     }
 
     public abstract void onStartAnimation(ErisAnimatedInventory erisInventory,
