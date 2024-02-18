@@ -1,4 +1,4 @@
-package fr.eris.eriscore.utils;
+package fr.eris.eriscore.utils.bukkit.color;
 
 import org.bukkit.ChatColor;
 

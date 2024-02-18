@@ -1,5 +1,6 @@
 package fr.eris.eriscore.manager.inventory.inventory.animated;
 
+import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventory;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventoryHolder;
 import fr.eris.eriscore.manager.inventory.inventory.animated.animation.IAnimation;
@@ -22,12 +23,15 @@ public abstract class ErisAnimatedInventory extends ErisInventory {
     public ErisAnimatedInventory(Player target, String inventoryName, int inventoryRowAmount,
                                  ErisInventoryHolder inventoryHolder) {
         super(target, inventoryName, inventoryRowAmount, inventoryHolder);
+        Debugger.getDebugger("ErisCore").test("Load Animated Inv !");
         this.animations = new ArrayList<>();
         this.animationTask = new AnimationInventoryTask(this);
     }
 
     public void registerAnimations(IAnimation... newAnimations) {
         if(newAnimations == null) return;
+        for(IAnimation animation : newAnimations)
+            animation.setAttachedInventory(this);
         animations.addAll(Arrays.asList(newAnimations));
     }
 

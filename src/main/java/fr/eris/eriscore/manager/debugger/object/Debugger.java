@@ -2,9 +2,8 @@ package fr.eris.eriscore.manager.debugger.object;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.debugger.config.YamlDebuggerConfig;
-import fr.eris.eriscore.utils.ColorUtils;
+import fr.eris.eriscore.utils.bukkit.color.ColorUtils;
 import lombok.Getter;
-import org.bukkit.plugin.PluginLogger;
 
 import java.util.HashMap;
 

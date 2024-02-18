@@ -231,6 +231,9 @@ public abstract class IErisCommand extends BukkitCommand {
             return currentSubCommandDepth.getB().tabComplete(sender, alias,
                     Arrays.copyOfRange(args, currentSubCommandDepth.getA(), args.length));
         }
+        if(!processPermission(sender, args)) {
+            return Collections.emptyList();
+        }
         String lastArgs = "";
         if(args.length > 0)
             lastArgs = args[args.length - 1];

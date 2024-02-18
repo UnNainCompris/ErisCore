@@ -4,7 +4,7 @@ import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.inventory.item.ClickAction;
 import fr.eris.eriscore.manager.inventory.item.ErisInventoryItem;
 import fr.eris.eriscore.manager.inventory.item.ItemUpdater;
-import fr.eris.eriscore.utils.ColorUtils;
+import fr.eris.eriscore.utils.bukkit.color.ColorUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public abstract class ErisInventory implements Listener {
     @Getter private Inventory inventory;
     private ErisInventoryHolder inventoryHolder;
     private Player viewers;
-    private int inventoryRowAmount;
+    @Getter private int inventoryRowAmount;
     private String inventoryName;
     private final HashMap<Integer, ErisInventoryItem> inventoryContent;
     private final UUID activeId;
@@ -71,7 +71,7 @@ public abstract class ErisInventory implements Listener {
     }
 
     private int getRealInventorySize() {
-        return (inventoryRowAmount * 9) - 1;
+        return (inventoryRowAmount * 9);
     }
 
     public void updateInventory() {

@@ -1,5 +1,6 @@
 package fr.eris.eriscore;
 
+import fr.eris.eriscore.commands.ErisCoreCommand;
 import fr.eris.eriscore.manager.command.CommandManager;
 import fr.eris.eriscore.manager.config.ConfigManager;
 import fr.eris.eriscore.manager.debugger.DebuggerManager;
@@ -21,21 +22,18 @@ public class ErisCore extends JavaPlugin {
     @ManagerPriority(init = Priority.HIGH) @Getter private static LanguageManager languageManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static ConfigManager configManager;
     @ManagerPriority(init = Priority.NORMAL) @Getter private static CommandManager commandManager;
-    public void start() {
-    }
 
-    public void stop() {
-    }
+    private ErisCoreCommand erisCoreCommand;
+
 
     public final void onEnable() {
         instance = this;
         FileCache.setupFile();
         ManagerEnabler.init(this);
-        start();
+        erisCoreCommand = new ErisCoreCommand();
     }
 
     public final void onDisable() {
         ManagerEnabler.stop(this);
-        stop();
     }
 }
