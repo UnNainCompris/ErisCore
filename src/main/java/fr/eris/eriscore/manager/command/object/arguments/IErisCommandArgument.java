@@ -10,11 +10,14 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class IErisCommandArgument<T> {
+
+    @Getter private T lastExecutionValue;
+
     @Getter private final String name;
     @Getter @Setter private IErisCommand parentCommand;
-    @Getter private final boolean canBeNull;
+    @Getter private final boolean canBeNull; // a nullable argument should be added at the end !
     private final ChoiceRetriever choiceRetriever;
-    protected boolean isForceChoice;
+    @Setter protected boolean isForceChoice;
 
     public IErisCommandArgument(String name, boolean canBeNull, ChoiceRetriever choiceRetriever) {
         this.name = name;
@@ -29,6 +32,18 @@ public abstract class IErisCommandArgument<T> {
         if(choiceRetriever == null) return Collections.emptyList();
         List<String> choice = choiceRetriever.retrieveChoices(sender);
         return choice != null ? choice : Collections.emptyList();
+    }
+
+    public void setValue(CommandSender sender, String arg) {
+        if(arg == null) {
+            lastExecutionValue = null;
+            return;
+        }
+        lastExecutionValue = retrieveValue(sender, arg);
+    }
+
+    public void resetValue() {
+        lastExecutionValue = null;
     }
 
     public interface ChoiceRetriever {

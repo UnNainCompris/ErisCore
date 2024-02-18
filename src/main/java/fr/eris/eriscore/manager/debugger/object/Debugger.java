@@ -53,53 +53,23 @@ public class Debugger {
     }
 
     public void info(String message) {
-        DebugTypeConfig config = configMap.get(DebugType.INFO);
-        if(!isEnable || !config.isEnabled) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+        debug(message, DebugType.INFO);
     }
 
     public void warning(String message) {
-        DebugTypeConfig config = configMap.get(DebugType.WARNING);
-        if(!isEnable || !config.isEnabled) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+        debug(message, DebugType.WARNING);
     }
 
     public void error(String message) {
-        DebugTypeConfig config = configMap.get(DebugType.ERROR);
-        if(!isEnable || !config.isEnabled) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+        debug(message, DebugType.ERROR);
     }
 
     public void severe(String message) {
-        DebugTypeConfig config = configMap.get(DebugType.SEVERE);
-        if(!isEnable || !config.isEnabled) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+        debug(message, DebugType.SEVERE);
     }
 
     public void test(String message) {
-        DebugTypeConfig config = configMap.get(DebugType.TEST);
-        if(!isEnable || !config.isEnabled) return;
-        ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
-                ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+        debug(message, DebugType.TEST);
     }
 
     public static Debugger getDebugger(String debuggerName) {

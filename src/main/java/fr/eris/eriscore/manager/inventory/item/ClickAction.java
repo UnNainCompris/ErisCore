@@ -7,11 +7,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public interface ClickAction {
 
+    @Getter
     class ClickActionData {
-        @Getter private final InventoryClickEvent event;
-        @Getter private final ErisInventory inventory;
-        @Getter private final ErisInventoryHolder inventoryHolder;
-        @Getter private final ErisInventoryItem clickedItem;
+        private final InventoryClickEvent event;
+        private final ErisInventory inventory;
+        private final ErisInventoryHolder inventoryHolder;
+        private final ErisInventoryItem clickedItem;
 
         public ClickActionData(InventoryClickEvent event, ErisInventory inventory,
                                ErisInventoryHolder inventoryHolder, ErisInventoryItem clickedItem) {

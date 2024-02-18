@@ -23,8 +23,8 @@ public class ErisCore extends JavaPlugin {
     @ManagerPriority(init = Priority.NORMAL) @Getter private static CommandManager commandManager;
     public void start() {
     }
-    public void stop() {
 
+    public void stop() {
     }
 
     public final void onEnable() {

@@ -5,31 +5,58 @@ import fr.eris.eriscore.manager.command.object.arguments.IErisCommandArgument;
 import fr.eris.eriscore.manager.command.object.error.ExecutionError;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.utils.storage.Tuple;
+import fr.eris.eriscore.utils.task.TaskUtils;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public abstract class IErisCommand extends BukkitCommand {
 
-    private final HashMap<String, IErisCommandArgument<?>> registeredArgument;
+    private final List<IErisCommandArgument<?>> registeredArgument;
     private final HashMap<String, IErisCommand> subCommands;
     private IErisCommand parentCommand;
     private final AvailableSender availableSender; // The available sender type for this command
+    private boolean canRegister = true;
 
     public IErisCommand(String name, AvailableSender availableSender, String permission, List<String> aliases) {
         super(name);
 
         this.subCommands = new HashMap<>();
-        this.registeredArgument = new HashMap<>();
+        this.registeredArgument = new ArrayList<>();
 
         setPermission(permission == null ? "" : permission);
         this.availableSender = availableSender;
         if(aliases != null)
             setAliases(aliases);
-        registerSubCommand();
+
+        TaskUtils.asyncLater((task) -> {
+            registerSubCommand();
+            registerCommandArgument();
+            validateCommandArgument();
+            if(canRegister) {
+                registerCommand();
+            } else {
+                if(!isSubcommand())
+                    Debugger.getDebugger("ErisCore").error("Error while registering a command ! {" + name + "}");
+            }
+        }, 1L);
+    }
+
+    public void validateCommandArgument() {
+        for(IErisCommandArgument<?> entry : registeredArgument) {
+            if(entry.isCanBeNull()) {
+                if(registeredArgument.indexOf(entry) != registeredArgument.size() - 1) {
+                    Debugger.getDebugger("ErisCore").severe("An argument that is null was found but he is not at the end !");
+                    canRegister = false;
+                    return;
+                }
+            }
+        }
     }
 
     public void registerCommand() {
@@ -59,7 +86,7 @@ public abstract class IErisCommand extends BukkitCommand {
                     "is already a register ! {" + newCommandArgument.getName() + "}");
             return;
         }
-        registeredArgument.put(newCommandArgument.getName().toLowerCase(), newCommandArgument);
+        registeredArgument.add(newCommandArgument);
         newCommandArgument.setParentCommand(this);
     }
 
@@ -73,16 +100,103 @@ public abstract class IErisCommand extends BukkitCommand {
     public boolean execute(CommandSender commandSender, String commandLabel, String[] args) {
         Tuple<Integer, IErisCommand> currentSubCommandDepth = findSubCommandFromArgs(args, 0);
         if(currentSubCommandDepth.getA() != 0)
-            return currentSubCommandDepth.getB().execute(commandSender, commandLabel, args);
+            return currentSubCommandDepth.getB().execute(commandSender, commandLabel,
+                    Arrays.copyOfRange(args, currentSubCommandDepth.getA(), args.length));
+        resetArgument();
 
+        if(!processPermission(commandSender, args)) {
+            return true;
+        }
 
+        if(!processSender(commandSender, args)) {
+            return true;
+        }
+
+        if(!processArguments(commandSender, args)) {
+            return true;
+        }
 
         execute(commandSender);
         return true;
     }
 
-    public int countNullableArgument() {
-        return 1;
+    public void resetArgument() {
+        for(IErisCommandArgument<?> commandArgument : registeredArgument) {
+            commandArgument.resetValue();
+        }
+    }
+
+    public boolean processPermission(CommandSender commandSender, String[] args) {
+        if(getPermission() == null || commandSender.hasPermission(getPermission())) {
+            return true;
+        }
+        handleError(commandSender, ExecutionError.INSUFFICIENT_PERMISSION, args);
+        return false;
+    }
+
+    public boolean processSender(CommandSender commandSender, String[] args) {
+        boolean isPlayer = commandSender instanceof Player;
+        boolean isConsole = commandSender instanceof ConsoleCommandSender;
+
+        if(isConsole && (availableSender == AvailableSender.CONSOLE_ONLY ||
+                availableSender == AvailableSender.CONSOLE_AND_PLAYER)) {
+            return true;
+        }
+
+        if(isPlayer && (availableSender == AvailableSender.PLAYER_ONLY ||
+            availableSender == AvailableSender.CONSOLE_AND_PLAYER)) {
+            return true;
+        }
+
+        handleError(commandSender, ExecutionError.INVALID_SENDER_TYPE, args);
+        return false;
+    }
+
+    public boolean processArguments(CommandSender commandSender, String[] args) {
+        boolean isLastNullable = !registeredArgument.isEmpty() && registeredArgument.get(registeredArgument.size()-1).isCanBeNull();
+
+        if((args.length < registeredArgument.size() && !isLastNullable) ||
+            (isLastNullable && args.length < registeredArgument.size() - 1)) {
+            handleError(commandSender, ExecutionError.NOT_ENOUGH_ARGS, args);
+            return false;
+        } else {
+            for(int i = 0 ; i < args.length ; i++) {
+                if(i >= registeredArgument.size()) break;
+                String currentArg = args[i];
+                IErisCommandArgument<?> commandArgument = registeredArgument.get(i);
+                if(!commandArgument.isValid(commandSender, currentArg)) {
+                    handleError(commandSender, ExecutionError.INVALID_ARGS_VALUE, args);
+                    return false;
+                }
+                commandArgument.setValue(commandSender, args[i]);
+            }
+        }
+
+        return true;
+    }
+
+    public <T extends IErisCommandArgument<?>> T retrieveArgument(Class<T> requireArgument, String argumentName) {
+        argumentName = argumentName.toLowerCase();
+        IErisCommandArgument<?> foundArguments = getArgumentByName(argumentName);
+        if(foundArguments != null && foundArguments.getClass().isAssignableFrom(requireArgument))
+            return requireArgument.cast(foundArguments);
+        return null;
+    }
+
+    public IErisCommandArgument<?> getArgumentByName(String argumentName) {
+        for(IErisCommandArgument<?> argument: registeredArgument) {
+            if(argument.getName().equalsIgnoreCase(argumentName)) return argument;
+        }
+        return null;
+    }
+
+    public <T extends IErisCommandArgument<V>, V> V retrieveArgumentValue(Class<T> requireArgument, String argumentName) {
+        argumentName = argumentName.toLowerCase();
+        IErisCommandArgument<V> foundArguments = retrieveArgument(requireArgument, argumentName);
+        if(foundArguments != null) {
+            return foundArguments.getLastExecutionValue();
+        }
+        return null;
     }
 
     public IErisCommand getSubCommand(String subcommandName) {
@@ -120,7 +234,18 @@ public abstract class IErisCommand extends BukkitCommand {
         String lastArgs = "";
         if(args.length > 0)
             lastArgs = args[args.length - 1];
+
+        if(registeredArgument.size() >= args.length) {
+            IErisCommandArgument<?> commandArgument = registeredArgument.get(args.length - 1);
+            for(String choice : commandArgument.getChoices(sender)) {
+                if(choice.toLowerCase().startsWith(lastArgs.toLowerCase())) {
+                    tabCompleteOption.add(choice);
+                }
+            }
+        }
+
         for(Map.Entry<String, IErisCommand> subcommandEntry : subCommands.entrySet()) {
+            if(args.length > 1) break;
             if(subcommandEntry.getValue().getName().toLowerCase().startsWith(lastArgs.toLowerCase())) { // check for subcommand name
                 tabCompleteOption.add(subcommandEntry.getValue().getName());
             }

@@ -15,7 +15,6 @@ public class TestCommand extends IErisCommand {
     public TestCommand() {
         super("eristest", AvailableSender.CONSOLE_AND_PLAYER,
                 "", Arrays.asList("erist", "etest"));
-        registerCommand();
     }
 
     public void registerSubCommand() {
@@ -23,14 +22,21 @@ public class TestCommand extends IErisCommand {
     }
 
     public void registerCommandArgument() {
-        addCommandArgument(new StringCommandArgument("testArgument", false, (sender) -> Collections.emptyList()));
+        addCommandArgument(new StringCommandArgument("testArgument", false,
+                (sender) -> Arrays.asList("Test", "est", "Banane", "Chapeaux", "Chat", "Champi")));
+        addCommandArgument(new StringCommandArgument("JambonArgs", false,
+                (sender) -> Arrays.asList("a", "bb", "ccc", "dddd", "eeeee", "ffffff")));
+        addCommandArgument(new StringCommandArgument("HamArgs", true,
+                (sender) -> Arrays.asList("HAM", "BURGER")));
     }
 
     public void execute(CommandSender sender) {
-        sender.sendMessage("Execute");
+        sender.sendMessage("Execute -A- " + retrieveArgumentValue(StringCommandArgument.class, "testArgument"));
+        sender.sendMessage("Execute -A- " + retrieveArgumentValue(StringCommandArgument.class, "JambonArgs"));
+        sender.sendMessage("Execute -A- " + retrieveArgumentValue(StringCommandArgument.class, "HamArgs"));
     }
 
     public void handleError(CommandSender sender, ExecutionError error, String[] args) {
-
+        sender.sendMessage(error.toString());
     }
 }
