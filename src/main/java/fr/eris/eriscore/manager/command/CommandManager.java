@@ -1,12 +1,10 @@
 package fr.eris.eriscore.manager.command;
 
 import fr.eris.eriscore.ErisCore;
-import fr.eris.eriscore.manager.command.commands.TestCommand;
 import fr.eris.eriscore.manager.command.object.IErisCommand;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.nms.NmsAdaptaterManager;
 import fr.eris.eriscore.utils.manager.Manager;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 
 import java.util.HashMap;
@@ -18,7 +16,6 @@ public class CommandManager extends Manager<ErisCore> {
 
     public void start() {
         commandMap = NmsAdaptaterManager.getNmsSupport().retrieveCommandMap();
-        new TestCommand();
     }
 
     public void stop() {

@@ -3,6 +3,7 @@ package fr.eris.eriscore.utils.file;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileUtils {
@@ -90,7 +91,7 @@ public class FileUtils {
         File[] allFile = directory.listFiles();
         if(allFile == null) 
             return new ArrayList<>();
-        return List.of(allFile);
+        return Arrays.asList(allFile);
     }
     
     public static void deleteFile(File directory, String fileName) {

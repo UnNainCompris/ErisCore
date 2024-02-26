@@ -12,6 +12,7 @@ import fr.eris.eriscore.utils.file.FileCache;
 import fr.eris.eriscore.utils.manager.ManagerEnabler;
 import fr.eris.eriscore.utils.manager.ManagerPriority;
 import fr.eris.eriscore.utils.manager.Priority;
+import fr.eris.eriscore.utils.task.TaskUtils;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -35,6 +36,7 @@ public class ErisCore extends JavaPlugin {
         FileCache.setupFile();
         ManagerEnabler.init(this);
         erisCoreCommand = new ErisCoreCommand();
+
     }
 
     public final void onDisable() {

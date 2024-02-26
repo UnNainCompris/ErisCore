@@ -16,13 +16,18 @@ public abstract class IErisCommandArgument<T> {
     @Getter private final String name;
     @Getter @Setter private IErisCommand parentCommand;
     @Getter private final boolean canBeNull; // a nullable argument should be added at the end !
-    private final ChoiceRetriever choiceRetriever;
-    @Setter protected boolean isForceChoice;
+    protected ChoiceRetriever choiceRetriever;
+    protected boolean isForceChoice;
 
     public IErisCommandArgument(String name, boolean canBeNull, ChoiceRetriever choiceRetriever) {
         this.name = name;
         this.canBeNull = canBeNull;
         this.choiceRetriever = choiceRetriever;
+    }
+
+    public IErisCommandArgument<?> setForceChoice(boolean forceChoice) {
+        this.isForceChoice = forceChoice;
+        return this;
     }
 
     public abstract boolean isValid(CommandSender sender, String args);
