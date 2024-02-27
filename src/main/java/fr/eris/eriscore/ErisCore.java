@@ -4,6 +4,7 @@ import fr.eris.eriscore.commands.ErisCoreCommand;
 import fr.eris.eriscore.manager.command.CommandManager;
 import fr.eris.eriscore.manager.config.ConfigManager;
 import fr.eris.eriscore.manager.database.DataBaseManager;
+import fr.eris.eriscore.manager.database.event.OnDataBaseConnect;
 import fr.eris.eriscore.manager.debugger.DebuggerManager;
 import fr.eris.eriscore.manager.inventory.InventoryManager;
 import fr.eris.eriscore.manager.language.LanguageManager;
@@ -14,6 +15,7 @@ import fr.eris.eriscore.utils.manager.ManagerPriority;
 import fr.eris.eriscore.utils.manager.Priority;
 import fr.eris.eriscore.utils.task.TaskUtils;
 import lombok.Getter;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ErisCore extends JavaPlugin {
@@ -29,6 +31,10 @@ public class ErisCore extends JavaPlugin {
     @ManagerPriority(init = Priority.LOWEST) @Getter private static InventoryManager inventoryManager;
 
     private ErisCoreCommand erisCoreCommand;
+
+    public static void postEvent(Event event) {
+        ErisCore.getInstance().getServer().getPluginManager().callEvent(event);
+    }
 
 
     public final void onEnable() {

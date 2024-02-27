@@ -1,4 +1,4 @@
-package fr.eris.eriscore.manager.config.object;
+package fr.eris.eriscore.manager.config.object.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
