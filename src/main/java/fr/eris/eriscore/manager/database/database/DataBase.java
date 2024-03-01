@@ -2,7 +2,6 @@ package fr.eris.eriscore.manager.database.database;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.database.DataBaseManager;
-import fr.eris.eriscore.manager.database.database.mongo.MongoDocument;
 import fr.eris.eriscore.manager.database.database.object.DataBaseQuery;
 import fr.eris.eriscore.manager.database.event.OnDataBaseConnect;
 import fr.eris.eriscore.manager.database.event.OnDataBaseDisconnect;
@@ -10,8 +9,6 @@ import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
 import fr.eris.eriscore.manager.database.database.object.DataBaseDocument;
 import lombok.Getter;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public abstract class DataBase<TDocument extends DataBaseDocument<?>> {
@@ -64,14 +61,39 @@ public abstract class DataBase<TDocument extends DataBaseDocument<?>> {
      */
     protected abstract boolean connect();
     protected void disconnect() {}
+
+    /**
+     * Used to build the connection url to connect to the database
+     * @param hideSensitiveData Used to know if we should hide sensitive data in the returned string (Use for printing error)
+     * @return the connection url
+     */
     public abstract String buildConnectionUrl(boolean hideSensitiveData);
 
-    public void insertIfAbsent(){}
-    public void set(){}
-    public abstract Set<TDocument> find(DataBaseQuery query);
-    public abstract TDocument findFirst(DataBaseQuery dataBaseQuery);
-    public void delete(){}
+    public abstract void insertIfAbsent(DataBaseQuery dataBaseQuery);
 
+    /**
+     * @param dataBaseQuery the query used to find element in the current collection
+     * @return return every element find in the current collection using the query
+     */
+    public abstract Set<TDocument> find(DataBaseQuery dataBaseQuery);
+
+    /**
+     * @param dataBaseQuery The query used to search in the current collection
+     * @return The first element find in the current collection using the query
+     */
+    public abstract TDocument findFirst(DataBaseQuery dataBaseQuery);
+
+    /**
+     * Use to delete every object in the database that matches with the query
+     * @param dataBaseQuery the query use to fin matching element
+     */
+    public abstract void delete(DataBaseQuery dataBaseQuery);
+
+    /**
+     * Used to check if 2 database instance are similar between each-other
+     * @param otherDataBase Another database to check
+     * @return tru if both of the database are similar
+     */
     public boolean isSimilar(DataBase<?> otherDataBase) {
         return otherDataBase.targetDataBase.equalsIgnoreCase(this.targetDataBase) &&
                 otherDataBase.targetHost.equalsIgnoreCase(this.targetHost) &&

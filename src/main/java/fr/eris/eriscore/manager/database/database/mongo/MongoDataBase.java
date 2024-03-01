@@ -48,15 +48,26 @@ public class MongoDataBase extends DataBase<MongoDocument> {
         this.collection = database.getCollection(newCollectionName == null ? defaultCollectionName : newCollectionName);
     }
 
+    public void setToDefaultCollection() {
+        changeCollection(null);
+    }
+
     public String buildConnectionUrl(boolean hideSensitiveData) {
         if(hideSensitiveData)
             return "mongodb://" + username + ":<pwd:hidden>@<host:hidden>:<port:hidden>/" + targetDataBase;
         else return "mongodb://" + username + ":" + password + "@" + targetHost + ":" + targetPort + "/" + targetDataBase;
     }
 
+    public void insertIfAbsent(DataBaseQuery dataBaseQuery) {
+        validateCollection();
+        Document searchQuery = buildDocumentFromQuery(dataBaseQuery);
+        if(!find(searchQuery).isEmpty()) return;
+        collection.insertOne(searchQuery);
+    }
+
     public void validateCollection() {
         if(collection == null) {
-            throw new ErisDatabaseException("Try accessing collection whilst the requested collection is null !");
+            throw new ErisDatabaseException("Try accessing an collection whilst the requested collection is null !");
         }
     }
 
@@ -66,21 +77,33 @@ public class MongoDataBase extends DataBase<MongoDocument> {
 
     public Set<MongoDocument> find(DataBaseQuery dataBaseQuery) {
         validateCollection();
-        Document searchQuery = new Document();
-        for(Tuple<String, Object> query : dataBaseQuery.getQuery())
-            searchQuery.put(query.getA(), query.getB());
-
+        Document searchQuery = buildDocumentFromQuery(dataBaseQuery);
+        return find(searchQuery);
+    }
+    public Set<MongoDocument> find(Document searchQuery) {
         Set<MongoDocument> documents = new HashSet<>();
         for(Document document : retrieveCollection().find(searchQuery))
             documents.add(new MongoDocument(document));
         return documents;
     }
 
+
     public MongoDocument findFirst(DataBaseQuery dataBaseQuery) {
         validateCollection();
-        Document searchQuery = new Document();
-        for(Tuple<String, Object> query : dataBaseQuery.getQuery())
-            searchQuery.put(query.getA(), query.getB());
+        Document searchQuery = buildDocumentFromQuery(dataBaseQuery);
         return new MongoDocument(retrieveCollection().find(searchQuery).first());
+    }
+
+    public void delete(DataBaseQuery dataBaseQuery) {
+        validateCollection();
+        Document searchQuery = buildDocumentFromQuery(dataBaseQuery);
+        collection.deleteMany(searchQuery);
+    }
+
+    public Document buildDocumentFromQuery(DataBaseQuery dataBaseQuery) {
+        Document document = new Document();
+        for(Tuple<String, Object> query : dataBaseQuery.getQuery())
+            document.put(query.getA(), query.getB());
+        return document;
     }
 }

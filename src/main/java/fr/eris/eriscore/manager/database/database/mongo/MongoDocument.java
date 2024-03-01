@@ -1,7 +1,11 @@
 package fr.eris.eriscore.manager.database.database.mongo;
 
 import fr.eris.eriscore.manager.database.database.object.DataBaseDocument;
+import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class MongoDocument extends DataBaseDocument<MongoDataBase> {
 
@@ -18,6 +22,10 @@ public class MongoDocument extends DataBaseDocument<MongoDataBase> {
         return this;
     }
 
+    public Date getCreationDate() {
+        return assignedDocument.getObjectId("_id").getDate();
+    }
+
     public <T> T getOrDefault(String key, T defaultValue) {
         Object value = assignedDocument.get(key);
         if(value == null) return defaultValue;
@@ -27,7 +35,48 @@ public class MongoDocument extends DataBaseDocument<MongoDataBase> {
         return null;
     }
 
+    public <T> T getAndCast(String key, Class<T> castingClassType) {
+        Object value = assignedDocument.get(key);
+        if(value == null) return null;
+        if(castingClassType.isAssignableFrom(value.getClass()))
+            return castingClassType.cast(value);
+        throw new ErisDatabaseException("Illegal class type use ! {requiredClass" + castingClassType +
+                ";foundedClass" + value.getClass() + "}");
+    }
+
     public Object getRaw(String key) {
         return assignedDocument.get(key);
+    }
+
+    public String getString(String key) {
+        return getAndCast(key, String.class);
+    }
+
+    public Integer getInt(String key) {
+        return getAndCast(key, Integer.class);
+    }
+
+    public Double getDouble(String key) {
+        return getAndCast(key, Double.class);
+    }
+
+    public Float getFloat(String key) {
+        return getAndCast(key, Float.class);
+    }
+
+    public Long getLong(String key) {
+        return getAndCast(key, Long.class);
+    }
+
+    public Short getShort(String key) {
+        return getAndCast(key, Short.class);
+    }
+
+    public Byte getByte(String key) {
+        return getAndCast(key, Byte.class);
+    }
+
+    public Boolean getBoolean(String key) {
+        return getAndCast(key, Boolean.class);
     }
 }
