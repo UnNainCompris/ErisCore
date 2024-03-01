@@ -1,8 +1,13 @@
 package fr.eris.eriscore.commands;
 
+import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.commands.inventory.TestInventory;
 import fr.eris.eriscore.manager.command.object.IErisCommand;
+import fr.eris.eriscore.manager.command.object.arguments.StringCommandArgument;
 import fr.eris.eriscore.manager.command.object.error.ExecutionError;
+import fr.eris.eriscore.manager.database.database.mongo.MongoDataBase;
+import fr.eris.eriscore.manager.database.database.mongo.MongoDocument;
+import fr.eris.eriscore.manager.database.database.object.DataBaseQuery;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimatedInventory;
 import fr.eris.eriscore.manager.inventory.inventory.animated.animation.IAnimation;
@@ -10,6 +15,7 @@ import fr.eris.eriscore.utils.bukkit.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,10 +35,20 @@ public class ErisCoreCommand extends IErisCommand {
     }
 
     public void registerCommandArgument() {
-
+        addCommandArgument(new StringCommandArgument("action", false,
+                (player) -> Arrays.asList("inventory", "database")).setForceChoice(true));
     }
 
     public void execute(CommandSender sender) {
+        String todo = retrieveArgumentValue(StringCommandArgument.class, "action");
+
+        if(todo.equalsIgnoreCase("inventory"))
+            inventory(sender);
+        if(todo.equalsIgnoreCase("database"))
+            database(sender);
+    }
+
+    public void inventory(CommandSender sender) {
         Player player = (Player) sender;
         TestInventory newInv = new TestInventory(player);
         newInv.openInventory();
@@ -59,6 +75,17 @@ public class ErisCoreCommand extends IErisCommand {
                 counter += 1;
             }
         });
+    }
+
+    public void database(CommandSender sender) {
+        MongoDataBase mongoDataBase = ErisCore.getDataBaseManager().retrieveDataBase(
+                "NewUser2", "PluginLearn", MongoDataBase.class);
+
+        mongoDataBase.insertIfAbsent(DataBaseQuery.createQuery("PlayerId", 0));
+
+        MongoDocument mongoDocument = mongoDataBase.findFirst(DataBaseQuery.createQuery("PlayerId", 0));
+
+        mongoDocument.set("PlayerMoney", mongoDocument.getOrDefault("PlayerMoney", 0) + 1);
     }
 
     public void handleError(CommandSender sender, ExecutionError error, String[] args) {

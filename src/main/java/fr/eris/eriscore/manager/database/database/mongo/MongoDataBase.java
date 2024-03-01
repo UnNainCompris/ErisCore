@@ -8,7 +8,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import fr.eris.eriscore.manager.database.database.DataBase;
+import fr.eris.eriscore.manager.database.database.object.DataBaseCredential;
 import fr.eris.eriscore.manager.database.database.object.DataBaseQuery;
+import fr.eris.eriscore.manager.database.database.object.DataBaseType;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
 import fr.eris.eriscore.utils.storage.Tuple;
 import org.bson.Document;
@@ -24,19 +26,19 @@ public class MongoDataBase extends DataBase<MongoDocument> {
     private MongoDatabase database;
     private MongoCollection<Document> collection;
 
-    public MongoDataBase(String targetDataBase, String targetHost,
-                         String targetPort, String password, String username) {
-        super(targetDataBase, targetHost, targetPort, password, username);
+    public MongoDataBase(DataBaseCredential credential) {
+        super(credential, DataBaseType.MONGO);
     }
 
     protected boolean connect() {
         try {
             MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
             settingsBuilder.applyConnectionString(new ConnectionString(buildConnectionUrl(false)));
-            settingsBuilder.credential(MongoCredential.createCredential(username, targetDataBase, password.toCharArray()));
+            settingsBuilder.credential(MongoCredential.createCredential(credential.getUsername(),
+                    credential.getTargetDataBase(), credential.getPassword().toCharArray()));
             mongoClient = MongoClients.create(settingsBuilder.build());
 
-            database = mongoClient.getDatabase(targetDataBase);
+            database = mongoClient.getDatabase(credential.getTargetDataBase());
             collection = database.getCollection("ErisCore");
         } catch (Exception e) {
             return false;
@@ -54,8 +56,9 @@ public class MongoDataBase extends DataBase<MongoDocument> {
 
     public String buildConnectionUrl(boolean hideSensitiveData) {
         if(hideSensitiveData)
-            return "mongodb://" + username + ":<pwd:hidden>@<host:hidden>:<port:hidden>/" + targetDataBase;
-        else return "mongodb://" + username + ":" + password + "@" + targetHost + ":" + targetPort + "/" + targetDataBase;
+            return "mongodb://" + credential.getUsername() + ":<pwd:hidden>@<host:hidden>:<port:hidden>/" + credential.getTargetDataBase();
+        else return "mongodb://" + credential.getUsername() + ":" + credential.getPassword() +
+                "@" + credential.getTargetHost() + ":" + credential.getTargetPort() + "/" + credential.getTargetDataBase();
     }
 
     public void insertIfAbsent(DataBaseQuery dataBaseQuery) {
@@ -83,7 +86,7 @@ public class MongoDataBase extends DataBase<MongoDocument> {
     public Set<MongoDocument> find(Document searchQuery) {
         Set<MongoDocument> documents = new HashSet<>();
         for(Document document : retrieveCollection().find(searchQuery))
-            documents.add(new MongoDocument(document));
+            documents.add(new MongoDocument(document, this));
         return documents;
     }
 
@@ -91,7 +94,7 @@ public class MongoDataBase extends DataBase<MongoDocument> {
     public MongoDocument findFirst(DataBaseQuery dataBaseQuery) {
         validateCollection();
         Document searchQuery = buildDocumentFromQuery(dataBaseQuery);
-        return new MongoDocument(retrieveCollection().find(searchQuery).first());
+        return new MongoDocument(retrieveCollection().find(searchQuery).first(), this);
     }
 
     public void delete(DataBaseQuery dataBaseQuery) {

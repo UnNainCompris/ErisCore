@@ -3,6 +3,8 @@ package fr.eris.eriscore.manager.database.database;
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.database.DataBaseManager;
 import fr.eris.eriscore.manager.database.database.object.DataBaseQuery;
+import fr.eris.eriscore.manager.database.database.object.DataBaseType;
+import fr.eris.eriscore.manager.database.database.object.DataBaseCredential;
 import fr.eris.eriscore.manager.database.event.OnDataBaseConnect;
 import fr.eris.eriscore.manager.database.event.OnDataBaseDisconnect;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
@@ -13,21 +15,19 @@ import java.util.Set;
 
 public abstract class DataBase<TDocument extends DataBaseDocument<?>> {
 
-    protected final String targetDataBase, targetHost, targetPort, password, username;
+    @Getter
+    protected final DataBaseCredential credential;
+    protected final DataBaseType dataBaseType;
 
     @Getter private boolean connected;
 
-    public DataBase(String targetDataBase, String targetHost,
-                    String targetPort, String password, String username) {
-        this.targetDataBase = targetDataBase;
-        this.targetHost = targetHost;
-        this.targetPort = targetPort;
-        this.password = password;
-        this.username = username;
+    public DataBase(DataBaseCredential credential, DataBaseType dataBaseType) {
+        this.credential = credential;
+        this.dataBaseType = dataBaseType;
 
         if(DataBaseManager.isOtherSimilarDatabase(this)) {
-            throw new ErisDatabaseException("Cannot have 2 similar (same user:" + username + ", " +
-                    "targetDatabase:" + targetDataBase + ", targetPort:<hidden>, targetHost:<hidden>) " +
+            throw new ErisDatabaseException("Cannot have 2 similar (same user:" + credential.getUsername() + ", " +
+                    "targetDatabase:" + credential.getTargetDataBase() + ", targetPort:<hidden>, targetHost:<hidden>) " +
                     "database loaded at the same time !");
         }
         DataBaseManager.appendNewDatabase(this);
@@ -45,7 +45,7 @@ public abstract class DataBase<TDocument extends DataBaseDocument<?>> {
 
     public void requestDisconnect(boolean silent) {
         if(!connected) {
-            System.out.println("Not connected " + targetDataBase);
+            System.out.println("Not connected " + credential.getTargetDataBase());
         }
         if(!silent) {
             OnDataBaseDisconnect onDataBaseDisconnect = new OnDataBaseDisconnect(this);
@@ -95,9 +95,22 @@ public abstract class DataBase<TDocument extends DataBaseDocument<?>> {
      * @return tru if both of the database are similar
      */
     public boolean isSimilar(DataBase<?> otherDataBase) {
-        return otherDataBase.targetDataBase.equalsIgnoreCase(this.targetDataBase) &&
-                otherDataBase.targetHost.equalsIgnoreCase(this.targetHost) &&
-                otherDataBase.targetPort.equalsIgnoreCase(this.targetPort) &&
-                otherDataBase.username.equalsIgnoreCase(this.username);
+        return otherDataBase.credential.getTargetDataBase().equalsIgnoreCase(this.credential.getTargetDataBase()) &&
+                otherDataBase.credential.getTargetHost().equalsIgnoreCase(this.credential.getTargetHost()) &&
+                otherDataBase.credential.getTargetPort().equalsIgnoreCase(this.credential.getTargetPort()) &&
+                otherDataBase.credential.getUsername().equalsIgnoreCase(this.credential.getUsername());
     }
+
+    /**
+     * Used to check if 2 database credential instance are similar between each-other
+     * @param otherDataBaseCredential Another database credential to check
+     * @return tru if both of the database credential are similar
+     */
+    public boolean isSimilar(DataBaseCredential otherDataBaseCredential) {
+        return otherDataBaseCredential.getTargetDataBase().equalsIgnoreCase(this.credential.getTargetDataBase()) &&
+                otherDataBaseCredential.getTargetHost().equalsIgnoreCase(this.credential.getTargetHost()) &&
+                otherDataBaseCredential.getTargetPort().equalsIgnoreCase(this.credential.getTargetPort()) &&
+                otherDataBaseCredential.getUsername().equalsIgnoreCase(this.credential.getUsername());
+    }
+
 }

@@ -4,6 +4,8 @@ import fr.eris.eriscore.commands.ErisCoreCommand;
 import fr.eris.eriscore.manager.command.CommandManager;
 import fr.eris.eriscore.manager.config.ConfigManager;
 import fr.eris.eriscore.manager.database.DataBaseManager;
+import fr.eris.eriscore.manager.database.database.object.DataBaseCredential;
+import fr.eris.eriscore.manager.database.database.object.DataBaseType;
 import fr.eris.eriscore.manager.database.event.OnDataBaseConnect;
 import fr.eris.eriscore.manager.debugger.DebuggerManager;
 import fr.eris.eriscore.manager.inventory.InventoryManager;
@@ -43,6 +45,9 @@ public class ErisCore extends JavaPlugin {
         ManagerEnabler.init(this);
         erisCoreCommand = new ErisCoreCommand();
 
+        dataBaseManager.loadIfAbsentDatabase(DataBaseType.MONGO,
+                DataBaseCredential.build("PluginLearn", "localhost",
+                        "27017", "StrongPassword2", "NewUser2"));
     }
 
     public final void onDisable() {

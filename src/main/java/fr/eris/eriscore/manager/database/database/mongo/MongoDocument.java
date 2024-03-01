@@ -1,5 +1,6 @@
 package fr.eris.eriscore.manager.database.database.mongo;
 
+import com.mongodb.client.MongoDatabase;
 import fr.eris.eriscore.manager.database.database.object.DataBaseDocument;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
 import org.bson.Document;
@@ -11,8 +12,9 @@ public class MongoDocument extends DataBaseDocument<MongoDataBase> {
 
     private final Document assignedDocument;
 
-    public MongoDocument(Document assignedDocument) {
+    public MongoDocument(Document assignedDocument, MongoDataBase parentDataBase) {
         this.assignedDocument = assignedDocument;
+        this.parentDataBase = parentDataBase;
     }
 
     public DataBaseDocument<MongoDataBase> set(String key, Object value) {
@@ -27,6 +29,7 @@ public class MongoDocument extends DataBaseDocument<MongoDataBase> {
     }
 
     public <T> T getOrDefault(String key, T defaultValue) {
+        if(!assignedDocument.containsKey(key)) return defaultValue;
         Object value = assignedDocument.get(key);
         if(value == null) return defaultValue;
         else if(value.getClass().isAssignableFrom(defaultValue.getClass()) ||
