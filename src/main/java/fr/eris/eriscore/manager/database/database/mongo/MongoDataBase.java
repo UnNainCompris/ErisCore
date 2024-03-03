@@ -41,6 +41,7 @@ public class MongoDataBase extends DataBase<MongoDocument> {
             database = mongoClient.getDatabase(credential.getTargetDataBase());
             collection = database.getCollection("ErisCore");
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;

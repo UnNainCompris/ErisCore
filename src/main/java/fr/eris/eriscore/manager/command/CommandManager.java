@@ -24,18 +24,18 @@ public class CommandManager extends Manager<ErisCore> {
 
     public void registerCommand(IErisCommand newCommandToRegister) {
         if(registeredCommand.containsKey(newCommandToRegister.getName().toLowerCase())) {
-            Debugger.getDebugger("ErisCore").severe("Two commannd with the same name try to get registered ! " +
+            Debugger.getDebugger().severe("Two commannd with the same name try to get registered ! " +
                     "{" + newCommandToRegister.getName().toLowerCase() + "}");
             return;
         }
-        Debugger.getDebugger("ErisCore").info("Registering new Command ! {" + newCommandToRegister.getName() + "}");
+        Debugger.getDebugger().info("Registering new Command ! {" + newCommandToRegister.getName() + "}");
         commandMap.register("eriscore", newCommandToRegister);
     }
 
     public void unRegisterCommand(String commandName) {
         IErisCommand foundCommand = registeredCommand.get(commandName);
         if(foundCommand == null) {
-            Debugger.getDebugger("ErisCore").warning("Unable to find " + commandName + " command to unregister it !");
+            Debugger.getDebugger().warning("Unable to find " + commandName + " command to unregister it !");
             return;
         }
         foundCommand.unregister(commandMap);

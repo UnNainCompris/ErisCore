@@ -75,6 +75,10 @@ public class Debugger {
         return ErisCore.getDebuggerManager().getDebugger(debuggerName);
     }
 
+    public static Debugger getDebugger() {
+        return ErisCore.getDebuggerManager().getDebugger(ErisCore.getInstance().getName());
+    }
+
     public class DebugTypeConfig {
         private final DebugType type;
         private final boolean isEnabled;

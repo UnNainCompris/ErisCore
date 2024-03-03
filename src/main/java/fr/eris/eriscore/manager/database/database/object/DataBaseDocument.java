@@ -13,6 +13,8 @@ public abstract class DataBaseDocument<TDataBase extends DataBase<?>> {
 
     public abstract Object getRaw(String key);
 
+    public abstract boolean isExist(String key);
+
     public abstract String getString(String key);
     public abstract Integer getInt(String key);
     public abstract Double getDouble(String key);

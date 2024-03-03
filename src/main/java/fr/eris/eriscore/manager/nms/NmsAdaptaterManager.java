@@ -14,13 +14,13 @@ public class NmsAdaptaterManager extends Manager<ErisCore> {
     @Getter private static NmsSupport nmsSupport;
 
     public void findNmsSupport() {
-        Debugger.getDebugger("ErisCore").info("Loading NmsSupport");
+        Debugger.getDebugger().info("Loading NmsSupport");
         serverNmsVersion = Version.findVersion(parent.getServer().getBukkitVersion());
         if(serverNmsVersion == Version.NOT_FOUND) {
-            Debugger.getDebugger("ErisCore").severe("No NmsSupport was found. Stopping the plugin...");
+            Debugger.getDebugger().severe("No NmsSupport was found. Stopping the plugin...");
             Bukkit.getServer().getPluginManager().disablePlugin(parent);
         } else {
-            Debugger.getDebugger("ErisCore").info("NmsSupport version found: " +
+            Debugger.getDebugger().info("NmsSupport version found: " +
                     serverNmsVersion.name() + " {" + serverNmsVersion.getVersionValue() + "}");
         }
         nmsSupport = serverNmsVersion.buildNmsSupport();

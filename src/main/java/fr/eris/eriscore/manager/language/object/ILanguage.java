@@ -16,38 +16,38 @@ public abstract class ILanguage extends IYamlConfig {
     }
 
     public void loadDefaultConfig() {
-        Debugger.getDebugger("ErisCore").info("Loading default language of " + languageName + " !");
+        Debugger.getDebugger().info("Loading default language of " + languageName + " !");
         for(Field field : ReflectionUtils.retrieveAnnotatedFieldOfType(this.getClass(), String.class, LanguagePath.class)) {
             try {
                 field.setAccessible(true);
                 LanguagePath languagePath = field.getAnnotation(LanguagePath.class);
                 String fieldValue = (String) field.get(this);
                 set(languageName + "." + languagePath.path(), fieldValue);
-                Debugger.getDebugger("ErisCore").info("Loaded field " + field.getName() + " at " + languagePath.path() + " !");
+                Debugger.getDebugger().info("Loaded field " + field.getName() + " at " + languagePath.path() + " !");
             } catch (IllegalAccessException exception) {
-                Debugger.getDebugger("ErisCore").severe("Error while trying to default load a language field ! " +
+                Debugger.getDebugger().severe("Error while trying to default load a language field ! " +
                         "{" + field.getName() + ", " + exception.getClass().getName() + "}");
             }
         }
         save();
-        Debugger.getDebugger("ErisCore").info("Finish loading default language of " + languageName + " !");
+        Debugger.getDebugger().info("Finish loading default language of " + languageName + " !");
     }
 
     public void load() {
         super.load();
-        Debugger.getDebugger("ErisCore").info("Loading language of " + languageName + " !");
+        Debugger.getDebugger().info("Loading language of " + languageName + " !");
         for(Field field : ReflectionUtils.retrieveAnnotatedFieldOfType(this.getClass(), String.class, LanguagePath.class)) {
             try {
                 field.setAccessible(true);
                 LanguagePath languagePath = field.getAnnotation(LanguagePath.class);
                 field.set(this, getString(languageName + "." + languagePath.path()));
-                Debugger.getDebugger("ErisCore").info("Loaded field " + field.getName() + " at " + languagePath.path() + " !");
+                Debugger.getDebugger().info("Loaded field " + field.getName() + " at " + languagePath.path() + " !");
             } catch (IllegalAccessException exception) {
-                Debugger.getDebugger("ErisCore").severe("Error while trying to load a language field ! " +
+                Debugger.getDebugger().severe("Error while trying to load a language field ! " +
                         "{" + field.getName() + ", " + exception.getClass().getName() + "}");
             }
         }
-        Debugger.getDebugger("ErisCore").info("Finish loading language of " + languageName + " !");
+        Debugger.getDebugger().info("Finish loading language of " + languageName + " !");
     }
 
     public String getSaveFileName() {

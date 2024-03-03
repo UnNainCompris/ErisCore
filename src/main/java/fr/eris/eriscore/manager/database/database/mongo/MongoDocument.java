@@ -24,6 +24,10 @@ public class MongoDocument extends DataBaseDocument<MongoDataBase> {
         return this;
     }
 
+    public boolean isExist(String key) {
+        return assignedDocument.containsKey(key);
+    }
+
     public Date getCreationDate() {
         return assignedDocument.getObjectId("_id").getDate();
     }

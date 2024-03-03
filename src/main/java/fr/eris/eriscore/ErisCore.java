@@ -46,8 +46,8 @@ public class ErisCore extends JavaPlugin {
         erisCoreCommand = new ErisCoreCommand();
 
         dataBaseManager.loadIfAbsentDatabase(DataBaseType.MONGO,
-                DataBaseCredential.build("PluginLearn", "localhost",
-                        "27017", "StrongPassword2", "NewUser2"));
+                DataBaseCredential.build("admin", "127.0.0.1",
+                        "27017", "password", "readUser"));
     }
 
     public final void onDisable() {

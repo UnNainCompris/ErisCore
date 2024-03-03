@@ -68,7 +68,7 @@ public class ErisCoreCommand extends IErisCommand {
                 if(counter == 9) counter = 0;
                 addAnimationStep((player) -> ItemBuilder.air().setMaterial(Material.STICK).build(),
                         (clickData) -> {
-                            Debugger.getDebugger("ErisCore").info("GetClicked!");
+                            Debugger.getDebugger().info("GetClicked!");
                             clickData.getEvent().setCancelled(true);
                         },
                         counter, 5);
@@ -79,7 +79,7 @@ public class ErisCoreCommand extends IErisCommand {
 
     public void database(CommandSender sender) {
         MongoDataBase mongoDataBase = ErisCore.getDataBaseManager().retrieveDataBase(
-                "NewUser2", "PluginLearn", MongoDataBase.class);
+                "readUser", "admin", MongoDataBase.class);
 
         mongoDataBase.insertIfAbsent(DataBaseQuery.createQuery("PlayerId", 0));
 

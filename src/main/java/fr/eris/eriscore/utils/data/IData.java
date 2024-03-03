@@ -44,7 +44,7 @@ public abstract class IData {
     private void processSaving() {
         long startSaveTime = System.currentTimeMillis();
         saveData();
-        Debugger.getDebugger("ErisCore")
+        Debugger.getDebugger()
                 .info("Saved " + getSaveFileName() + " at " + getSaveDirectory().getAbsolutePath() + " in "
                         + (System.currentTimeMillis() - startSaveTime) + " ms! {async: " + asyncSaving + "}");
     }

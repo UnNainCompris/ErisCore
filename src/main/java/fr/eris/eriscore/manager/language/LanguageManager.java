@@ -27,10 +27,10 @@ public class LanguageManager extends Manager<ErisCore> {
         if(!loadedLanguage.containsKey(languageName)) {
             T newLanguage = loadLanguage(languageName, languageType);
             loadedLanguage.put(languageName, newLanguage);
-            Debugger.getDebugger("ErisCore").info("Language " + languageName + "is now loaded !");
+            Debugger.getDebugger().info("Language " + languageName + "is now loaded !");
         } else {
             if(!languageType.isAssignableFrom(loadedLanguage.get(languageName).getClass())) {
-                Debugger.getDebugger("ErisCore").error("A language with the same name but not the same type is already loaded");
+                Debugger.getDebugger().error("A language with the same name but not the same type is already loaded");
                 throw new IllegalArgumentException();
             }
         }
@@ -41,10 +41,10 @@ public class LanguageManager extends Manager<ErisCore> {
         try {
             Constructor<T> constructor = languageType.getDeclaredConstructor(String.class); // get the ILanguage default constructor
             T newLanguage = constructor.newInstance(languageName);
-            Debugger.getDebugger("ErisCore").info("Creating new instance of " + languageType + " !");
+            Debugger.getDebugger().info("Creating new instance of " + languageType + " !");
             return newLanguage;
         } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-            Debugger.getDebugger("ErisCore").error("No constructor was found for " + languageType + " !");
+            Debugger.getDebugger().error("No constructor was found for " + languageType + " !");
             return null;
         }
     }

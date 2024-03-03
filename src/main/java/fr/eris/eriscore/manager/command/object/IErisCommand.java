@@ -40,7 +40,7 @@ public abstract class IErisCommand extends BukkitCommand {
                 registerCommand();
             } else {
                 if(!isSubcommand())
-                    Debugger.getDebugger("ErisCore").error("Error while registering a command ! {" + name + "}");
+                    Debugger.getDebugger().error("Error while registering a command ! {" + name + "}");
             }
         }, 1L);
     }
@@ -49,7 +49,7 @@ public abstract class IErisCommand extends BukkitCommand {
         for(IErisCommandArgument<?> entry : registeredArgument) {
             if(entry.isCanBeNull()) {
                 if(registeredArgument.indexOf(entry) != registeredArgument.size() - 1) {
-                    Debugger.getDebugger("ErisCore").severe("An argument that is null was found but he is not at the end !");
+                    Debugger.getDebugger().severe("An argument that is null was found but he is not at the end !");
                     canRegister = false;
                     return;
                 }
@@ -70,7 +70,7 @@ public abstract class IErisCommand extends BukkitCommand {
 
     public void addSubcommand(IErisCommand newSubcommand) {
         if(newSubcommand.isSubcommand()) {
-            Debugger.getDebugger("ErisCore").severe("Try to register a command as subcommand that " +
+            Debugger.getDebugger().severe("Try to register a command as subcommand that " +
                     "is already a subcommand ! {" + newSubcommand.getName() + "}");
             return;
         }
@@ -80,7 +80,7 @@ public abstract class IErisCommand extends BukkitCommand {
 
     public void addCommandArgument(IErisCommandArgument<?> newCommandArgument) {
         if(newCommandArgument.getParentCommand() != null) {
-            Debugger.getDebugger("ErisCore").severe("Try to register a command argument that " +
+            Debugger.getDebugger().severe("Try to register a command argument that " +
                     "is already a register ! {" + newCommandArgument.getName() + "}");
             return;
         }
