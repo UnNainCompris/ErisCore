@@ -3,7 +3,7 @@ package fr.eris.eriscore.manager.language;
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.language.object.ILanguage;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

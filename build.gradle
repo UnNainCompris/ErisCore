@@ -51,9 +51,11 @@ shadowJar {
 }
 
 dependencies {
-    compileOnly project(":NmsModule:api")
+    //compileOnly project(":NmsModule:api")
     compileOnly project(":NmsModule:NMS_1_20_R1")
     compileOnly project(":NmsModule:NMS_1_8_R3")
+
+    compileOnly project(":api")
 
     implementation 'org.mongodb:mongodb-driver-sync:4.8.2'
 

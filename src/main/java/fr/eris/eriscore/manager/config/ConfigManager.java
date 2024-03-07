@@ -2,7 +2,7 @@ package fr.eris.eriscore.manager.config;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.utils.data.IData;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 import fr.eris.eriscore.utils.task.ErisTask;
 import fr.eris.eriscore.utils.task.TaskUtils;
 

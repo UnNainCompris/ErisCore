@@ -5,7 +5,7 @@ import fr.eris.eriscore.manager.database.database.DataBase;
 import fr.eris.eriscore.manager.database.database.object.DataBaseCredential;
 import fr.eris.eriscore.manager.database.database.object.DataBaseType;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

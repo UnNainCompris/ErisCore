@@ -2,7 +2,7 @@ package fr.eris.eriscore.manager.inventory;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventory;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 
 import java.util.ArrayList;
 import java.util.List;

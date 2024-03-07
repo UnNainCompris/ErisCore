@@ -4,7 +4,7 @@ import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.command.object.IErisCommand;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.nms.NmsAdaptaterManager;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 import org.bukkit.command.CommandMap;
 
 import java.util.HashMap;

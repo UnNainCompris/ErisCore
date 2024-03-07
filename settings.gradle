@@ -1,8 +1,10 @@
 rootProject.name = 'ErisCore'
-include 'NmsModule:api'
-findProject(':NmsModule:api')?.name = 'api'
+
 include 'NmsModule:NMS_1_20_R1'
 findProject(':NmsModule:NMS_1_20_R1')?.name = 'NMS_1_20_R1'
+
 include 'NmsModule:NMS_1_8_R3'
 findProject(':NmsModule:NMS_1_8_R3')?.name = 'NMS_1_8_R3'
+
+include 'api'
 

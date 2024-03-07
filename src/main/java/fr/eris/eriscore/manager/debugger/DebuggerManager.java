@@ -2,7 +2,7 @@ package fr.eris.eriscore.manager.debugger;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
-import fr.eris.eriscore.utils.manager.Manager;
+import fr.eris.eriscore.manager.utils.Manager;
 
 import java.util.HashMap;
 
