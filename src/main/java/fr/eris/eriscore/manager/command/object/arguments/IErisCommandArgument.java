@@ -1,57 +1,52 @@
 package fr.eris.eriscore.manager.command.object.arguments;
 
-import fr.eris.eriscore.manager.command.object.IErisCommand;
+import fr.eris.eriscore.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
+import fr.eris.eriscore.manager.commands.object.argument.choice.ArgumentChoice;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
-public abstract class IErisCommandArgument<T> {
+@Getter
+public abstract class IErisCommandArgument<T> implements ErisCommandArgument<T> {
 
-    @Getter private T lastExecutionValue;
+    @Setter private T currentExecutionValue;
 
-    @Getter private final String name;
-    @Getter @Setter private IErisCommand parentCommand;
-    @Getter private final boolean canBeNull; // a nullable argument should be added at the end !
-    protected ChoiceRetriever choiceRetriever;
-    protected boolean isForceChoice;
+    private final String name;
+    @Setter private ErisCommand parentCommand;
 
-    public IErisCommandArgument(String name, boolean canBeNull, ChoiceRetriever choiceRetriever) {
+    private final boolean nullable; // a nullable argument should be added at the end !
+    private final boolean forceChoice;
+    @Setter private ArgumentChoice argumentChoice;
+
+    public IErisCommandArgument(String name, boolean nullable, boolean isForceChoice, ArgumentChoice argumentChoice) {
         this.name = name;
-        this.canBeNull = canBeNull;
-        this.choiceRetriever = choiceRetriever;
+        this.nullable = nullable;
+        this.argumentChoice = argumentChoice;
+        this.forceChoice = isForceChoice;
     }
 
-    public IErisCommandArgument<?> setForceChoice(boolean forceChoice) {
-        this.isForceChoice = forceChoice;
-        return this;
-    }
+    public abstract boolean isArgumentValid(CommandSender sender, String args);
+    public abstract T convertValue(CommandSender sender, String args);
 
-    public abstract boolean isValid(CommandSender sender, String args);
-    public abstract T retrieveValue(CommandSender sender, String args);
-
-    public final List<String> getChoices(CommandSender sender) {
-        if(choiceRetriever == null) return Collections.emptyList();
-        List<String> choice = choiceRetriever.retrieveChoices(sender);
+    public final Collection<String> retrieveChoices(CommandSender sender) {
+        if(argumentChoice == null) return Collections.emptyList();
+        Collection<String> choice = argumentChoice.retrieveChoices(sender);
         return choice != null ? choice : Collections.emptyList();
     }
 
     public void setValue(CommandSender sender, String arg) {
         if(arg == null) {
-            lastExecutionValue = null;
+            currentExecutionValue = null;
             return;
         }
-        lastExecutionValue = retrieveValue(sender, arg);
+        currentExecutionValue = convertValue(sender, arg);
     }
 
     public void resetValue() {
-        lastExecutionValue = null;
-    }
-
-    public interface ChoiceRetriever {
-        List<String> retrieveChoices(CommandSender sender);
+        currentExecutionValue = null;
     }
 }

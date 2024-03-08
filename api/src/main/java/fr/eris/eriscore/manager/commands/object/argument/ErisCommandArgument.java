@@ -10,6 +10,8 @@ public interface ErisCommandArgument<T> {
 
     T getCurrentExecutionValue();
 
+    void setCurrentExecutionValue(T currentExecutionValue);
+
     String getName();
 
     ErisCommand getParentCommand();
@@ -22,7 +24,7 @@ public interface ErisCommandArgument<T> {
     ArgumentChoice getArgumentChoice();
 
     void resetValue();
-    void setCurrentExecutionValue(CommandSender requester, String argumentAsString);
+    void setValue(CommandSender sender, String arg);
 
     Collection<String> retrieveChoices(CommandSender choicesRequester);
 

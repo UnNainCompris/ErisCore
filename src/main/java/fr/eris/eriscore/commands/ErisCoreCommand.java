@@ -4,7 +4,9 @@ import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.commands.inventory.TestInventory;
 import fr.eris.eriscore.manager.command.object.IErisCommand;
 import fr.eris.eriscore.manager.command.object.arguments.StringCommandArgument;
-import fr.eris.eriscore.manager.command.object.error.ExecutionError;
+import fr.eris.eriscore.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
+import fr.eris.eriscore.manager.commands.object.error.ExecutionError;
 import fr.eris.eriscore.manager.database.database.mongo.MongoDataBase;
 import fr.eris.eriscore.manager.database.database.mongo.MongoDocument;
 import fr.eris.eriscore.manager.database.database.object.DataBaseQuery;
@@ -18,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.checkerframework.checker.units.qual.C;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,15 +31,17 @@ public class ErisCoreCommand extends IErisCommand {
     public ErisCoreCommand() {
         super("ErisCore", AvailableSender.CONSOLE_AND_PLAYER,
                 "eriscore.eriscore", Collections.singletonList("Eris"));
+
+        registerCommand();
     }
 
-    public void registerSubCommand() {
-
+    public Collection<ErisCommand> registerSubCommand() {
+        return null;
     }
 
-    public void registerCommandArgument() {
-        addCommandArgument(new StringCommandArgument("action", false,
-                (player) -> Arrays.asList("inventory", "database")).setForceChoice(true));
+    public Collection<ErisCommandArgument<?>> registerCommandArgument() {
+        return Arrays.asList(new StringCommandArgument("action", false, true,
+                (player) -> Arrays.asList("inventory", "database")));
     }
 
     public void execute(CommandSender sender) {
@@ -46,6 +51,11 @@ public class ErisCoreCommand extends IErisCommand {
             inventory(sender);
         if(todo.equalsIgnoreCase("database"))
             database(sender);
+    }
+
+    @Override
+    public void handleError(CommandSender sender, ExecutionError error, String[] args) {
+
     }
 
     public void inventory(CommandSender sender) {
@@ -86,9 +96,5 @@ public class ErisCoreCommand extends IErisCommand {
         MongoDocument mongoDocument = mongoDataBase.findFirst(DataBaseQuery.createQuery("PlayerId", 0));
 
         mongoDocument.set("PlayerMoney", mongoDocument.getOrDefault("PlayerMoney", 0) + 1);
-    }
-
-    public void handleError(CommandSender sender, ExecutionError error, String[] args) {
-
     }
 }

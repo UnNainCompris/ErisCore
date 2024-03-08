@@ -1,17 +1,17 @@
 package fr.eris.eriscore.manager.commands;
 
+import fr.eris.eriscore.manager.commands.object.ErisCommand;
 import fr.eris.eriscore.manager.utils.Manager;
 import org.bukkit.command.CommandMap;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public interface CommandManager<T> extends Manager<T> {
 
     CommandMap retrieveCommandMap();
 
-    void registerCommand();
-    void unRegisterCommand();
+    <C extends ErisCommand> void registerCommand(C commandToRegister);
+    void unRegisterCommand(String commandName);
 
-    HashMap<String, Object> retrieveRegisteredCommand();
+    HashMap<String, ErisCommand> retrieveRegisteredCommand();
 }

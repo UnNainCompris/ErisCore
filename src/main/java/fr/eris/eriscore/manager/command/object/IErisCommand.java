@@ -2,12 +2,12 @@ package fr.eris.eriscore.manager.command.object;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.command.object.arguments.IErisCommandArgument;
-import fr.eris.eriscore.manager.command.object.error.ExecutionError;
+import fr.eris.eriscore.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
+import fr.eris.eriscore.manager.commands.object.error.ExecutionError;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.utils.storage.Tuple;
-import fr.eris.eriscore.utils.task.TaskUtils;
-import lombok.NonNull;
-import org.bukkit.Location;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -15,13 +15,12 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public abstract class IErisCommand extends BukkitCommand {
+public abstract class IErisCommand extends BukkitCommand implements ErisCommand {
 
-    private final List<IErisCommandArgument<?>> registeredArgument;
-    private final HashMap<String, IErisCommand> subCommands;
-    private IErisCommand parentCommand;
+    private final List<ErisCommandArgument<?>> registeredArgument;
+    private final HashMap<String, ErisCommand> subCommands;
+    @Setter private ErisCommand parentCommand;
     private final AvailableSender availableSender; // The available sender type for this command
-    private boolean canRegister = true;
 
     public IErisCommand(String name, AvailableSender availableSender, String permission, List<String> aliases) {
         super(name, "", "", aliases == null ? Collections.emptyList() : aliases);
@@ -32,25 +31,19 @@ public abstract class IErisCommand extends BukkitCommand {
         setPermission(permission == null ? "" : permission);
         this.availableSender = availableSender;
 
-        TaskUtils.asyncLater((task) -> {
-            registerSubCommand();
-            registerCommandArgument();
-            validateCommandArgument();
-            if(canRegister) {
-                registerCommand();
-            } else {
-                if(!isSubcommand())
-                    Debugger.getDebugger().error("Error while registering a command ! {" + name + "}");
-            }
-        }, 1L);
+        for(ErisCommand command : registerSubCommand())
+            addSubcommand(command);
+        for(ErisCommandArgument<?> commandArgument : registerCommandArgument())
+            addCommandArgument(commandArgument);
+
+        validateCommandArguments();
     }
 
-    public void validateCommandArgument() {
-        for(IErisCommandArgument<?> entry : registeredArgument) {
-            if(entry.isCanBeNull()) {
+    public void validateCommandArguments() {
+        for(ErisCommandArgument<?> entry : registeredArgument) {
+            if(entry.isNullable()) {
                 if(registeredArgument.indexOf(entry) != registeredArgument.size() - 1) {
                     Debugger.getDebugger().severe("An argument that is null was found but he is not at the end !");
-                    canRegister = false;
                     return;
                 }
             }
@@ -62,23 +55,24 @@ public abstract class IErisCommand extends BukkitCommand {
             ErisCore.getCommandManager().registerCommand(this);
     }
 
-    /**
-     *  The place where you should add all you sub command using {@link #addSubcommand(IErisCommand)}
-     */
-    public abstract void registerSubCommand();
-    public abstract void registerCommandArgument();
+    public void unregisterCommand() {
+        super.unregister(ErisCore.getCommandManager().retrieveCommandMap());
+    }
 
-    public void addSubcommand(IErisCommand newSubcommand) {
+    public abstract Collection<ErisCommand> registerSubCommand();
+    public abstract Collection<ErisCommandArgument<?>> registerCommandArgument();
+
+    public void addSubcommand(ErisCommand newSubcommand) {
         if(newSubcommand.isSubcommand()) {
             Debugger.getDebugger().severe("Try to register a command as subcommand that " +
                     "is already a subcommand ! {" + newSubcommand.getName() + "}");
             return;
         }
         subCommands.put(newSubcommand.getName().toLowerCase(), newSubcommand);
-        newSubcommand.parentCommand = this;
+        newSubcommand.setParentCommand(this);
     }
 
-    public void addCommandArgument(IErisCommandArgument<?> newCommandArgument) {
+    public void addCommandArgument(ErisCommandArgument<?> newCommandArgument) {
         if(newCommandArgument.getParentCommand() != null) {
             Debugger.getDebugger().severe("Try to register a command argument that " +
                     "is already a register ! {" + newCommandArgument.getName() + "}");
@@ -100,7 +94,7 @@ public abstract class IErisCommand extends BukkitCommand {
         if(currentSubCommandDepth.getA() != 0)
             return currentSubCommandDepth.getB().execute(commandSender, commandLabel,
                     Arrays.copyOfRange(args, currentSubCommandDepth.getA(), args.length));
-        resetArgument();
+        resetArgumentValue();
 
         if(!processPermission(commandSender, args)) {
             return true;
@@ -118,8 +112,8 @@ public abstract class IErisCommand extends BukkitCommand {
         return true;
     }
 
-    public void resetArgument() {
-        for(IErisCommandArgument<?> commandArgument : registeredArgument) {
+    public void resetArgumentValue() {
+        for(ErisCommandArgument<?> commandArgument : registeredArgument) {
             commandArgument.resetValue();
         }
     }
@@ -151,7 +145,7 @@ public abstract class IErisCommand extends BukkitCommand {
     }
 
     public boolean processArguments(CommandSender commandSender, String[] args) {
-        boolean isLastNullable = !registeredArgument.isEmpty() && registeredArgument.get(registeredArgument.size()-1).isCanBeNull();
+        boolean isLastNullable = !registeredArgument.isEmpty() && registeredArgument.get(registeredArgument.size()-1).isNullable();
 
         if((args.length < registeredArgument.size() && !isLastNullable) ||
             (isLastNullable && args.length < registeredArgument.size() - 1)) {
@@ -161,8 +155,8 @@ public abstract class IErisCommand extends BukkitCommand {
             for(int i = 0 ; i < args.length ; i++) {
                 if(i >= registeredArgument.size()) break;
                 String currentArg = args[i];
-                IErisCommandArgument<?> commandArgument = registeredArgument.get(i);
-                if(!commandArgument.isValid(commandSender, currentArg)) {
+                ErisCommandArgument<?> commandArgument = registeredArgument.get(i);
+                if(!commandArgument.isArgumentValid(commandSender, currentArg)) {
                     handleError(commandSender, ExecutionError.INVALID_ARGS_VALUE, args);
                     return false;
                 }
@@ -173,49 +167,48 @@ public abstract class IErisCommand extends BukkitCommand {
         return true;
     }
 
-    public <T extends IErisCommandArgument<?>> T retrieveArgument(Class<T> requireArgument, String argumentName) {
+    public <T extends ErisCommandArgument<?>> T retrieveArgument(Class<T> requireArgument, String argumentName) {
         argumentName = argumentName.toLowerCase();
-        IErisCommandArgument<?> foundArguments = getArgumentByName(argumentName);
+        ErisCommandArgument<?> foundArguments = getArgumentByName(argumentName);
         if(foundArguments != null && foundArguments.getClass().isAssignableFrom(requireArgument))
             return requireArgument.cast(foundArguments);
         return null;
     }
 
-    public IErisCommandArgument<?> getArgumentByName(String argumentName) {
-        for(IErisCommandArgument<?> argument: registeredArgument) {
+    public ErisCommandArgument<?> getArgumentByName(String argumentName) {
+        for(ErisCommandArgument<?> argument: registeredArgument) {
             if(argument.getName().equalsIgnoreCase(argumentName)) return argument;
         }
         return null;
     }
 
-    public <T extends IErisCommandArgument<V>, V> V retrieveArgumentValue(Class<T> requireArgument, String argumentName) {
+    public <T extends ErisCommandArgument<V>, V> V retrieveArgumentValue(Class<T> requireArgument, String argumentName) {
         argumentName = argumentName.toLowerCase();
-        IErisCommandArgument<V> foundArguments = retrieveArgument(requireArgument, argumentName);
-        if(foundArguments != null) {
-            return foundArguments.getLastExecutionValue();
+        ErisCommandArgument<V> foundArguments = retrieveArgument(requireArgument, argumentName);
+        if (foundArguments != null) {
+            return foundArguments.getCurrentExecutionValue();
         }
         return null;
     }
 
-    public IErisCommand getSubCommand(String subcommandName) {
-        IErisCommand foundSubCommand = subCommands.get(subcommandName.toLowerCase());
+    public ErisCommand getSubcommandByName(String subcommandName) {
+        ErisCommand foundSubCommand = subCommands.get(subcommandName.toLowerCase());
         if(foundSubCommand != null) return foundSubCommand;
 
-        for(IErisCommand subcommand : this.subCommands.values()) {
+        for(ErisCommand subcommand : this.subCommands.values()) {
             for (String aliases : this.getAliases()) {
                 if (aliases.equalsIgnoreCase(subcommandName)) {
                     return subcommand;
                 }
             }
         }
-
         return null;
     }
 
     public Tuple<Integer, IErisCommand> findSubCommandFromArgs(String[] arguments, int currentDepth) {
         if(arguments == null || arguments.length == 0) return new Tuple<>(currentDepth, this);
         currentDepth += 1;
-        IErisCommand tempSubCommand = getSubCommand(arguments[0]);
+        IErisCommand tempSubCommand = (IErisCommand) getSubcommandByName(arguments[0]);
         return tempSubCommand != null ?
                 tempSubCommand.findSubCommandFromArgs(Arrays.copyOfRange(arguments, 1, arguments.length), currentDepth) :
                 new Tuple<>(currentDepth - 1, this);
@@ -237,15 +230,15 @@ public abstract class IErisCommand extends BukkitCommand {
             lastArgs = args[args.length - 1];
 
         if(registeredArgument.size() >= args.length) {
-            IErisCommandArgument<?> commandArgument = registeredArgument.get(args.length - 1);
-            for(String choice : commandArgument.getChoices(sender)) {
+            ErisCommandArgument<?> commandArgument = registeredArgument.get(args.length - 1);
+            for(String choice : commandArgument.retrieveChoices(sender)) {
                 if(choice.toLowerCase().startsWith(lastArgs.toLowerCase())) {
                     tabCompleteOption.add(choice);
                 }
             }
         }
 
-        for(Map.Entry<String, IErisCommand> subcommandEntry : subCommands.entrySet()) {
+        for(Map.Entry<String, ErisCommand> subcommandEntry : subCommands.entrySet()) {
             if(args.length > 1) break;
             if(subcommandEntry.getValue().getName().toLowerCase().startsWith(lastArgs.toLowerCase())) { // check for subcommand name
                 tabCompleteOption.add(subcommandEntry.getValue().getName());
