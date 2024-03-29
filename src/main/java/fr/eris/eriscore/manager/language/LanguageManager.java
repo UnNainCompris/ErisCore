@@ -4,14 +4,17 @@ import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.language.object.ILanguage;
 import fr.eris.eriscore.manager.utils.Manager;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-public class LanguageManager extends Manager<ErisCore> {
+public class LanguageManager implements Manager<ErisCore> {
 
     private final HashMap<String, ILanguage> loadedLanguage = new HashMap<>();
+    @Getter @Setter private ErisCore parent;
 
     public void start() {
 
@@ -41,6 +44,7 @@ public class LanguageManager extends Manager<ErisCore> {
         try {
             Constructor<T> constructor = languageType.getDeclaredConstructor(String.class); // get the ILanguage default constructor
             T newLanguage = constructor.newInstance(languageName);
+            newLanguage.load();
             Debugger.getDebugger().info("Creating new instance of " + languageType + " !");
             return newLanguage;
         } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {

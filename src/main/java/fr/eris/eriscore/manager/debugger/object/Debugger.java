@@ -26,17 +26,17 @@ public class Debugger {
         if(!config.isDebuggerExist(debuggerNameLowerCase))
             config.loadDefaultConfig(debuggerName);
 
-        isEnable = config.getBoolean(debuggerNameLowerCase + ".enabled", false);
-        prefix = config.getString(debuggerNameLowerCase + ".prefix", "&6[&7" + debuggerName + " Debugger&6]");
-        format = config.getString(debuggerNameLowerCase + ".format", "%prefix% - %type% &e- &9%message%");
+        isEnable = config.getDataDocument().getBoolean(debuggerNameLowerCase + ".enabled", false);
+        prefix = config.getDataDocument().getString(debuggerNameLowerCase + ".prefix", "&6[&7" + debuggerName + " Debugger&6]");
+        format = config.getDataDocument().getString(debuggerNameLowerCase + ".format", "%prefix% - %type% &e- &9%message%");
         for(DebugType type : DebugType.values()) {
             String currentFormat =
-                    config.getBoolean(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".useCustomFormat", false) ?
-                    config.getString(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".customFormat",
+                    config.getDataDocument().getBoolean(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".useCustomFormat", false) ?
+                            config.getDataDocument().getString(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".customFormat",
                             "%prefix% - %type% &e- &9%message%") : format;
             configMap.put(type, new DebugTypeConfig(type,
-                    config.getBoolean(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".enabled", true),
-                    config.getString(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".typeDisplay", type.getDisplay()),
+                    config.getDataDocument().getBoolean(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".enabled", true),
+                    config.getDataDocument().getString(debuggerNameLowerCase + "." + type.name().toLowerCase() + ".typeDisplay", type.getDisplay()),
                     currentFormat));
         }
     }
@@ -69,6 +69,9 @@ public class Debugger {
 
     public void test(String message) {
         debug(message, DebugType.TEST);
+    }
+    public void development(String message) {
+        debug(message, DebugType.DEVELOPMENT);
     }
 
     public static Debugger getDebugger(String debuggerName) {
