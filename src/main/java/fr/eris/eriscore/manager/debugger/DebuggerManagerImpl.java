@@ -28,7 +28,7 @@ public class DebuggerManagerImpl implements DebuggerManager<ErisCore> {
         if(!loadedDebugger.containsKey(debuggerName)) {
             Debugger newDebugger = new DebuggerImpl(defaultDebuggerName);
             loadedDebugger.put(debuggerName, newDebugger);
-            if(newDebugger.isEnabled()) newDebugger.info("Is now loaded ! [Look at debug.yml for configuration]");
+            if(newDebugger.isEnabled()) newDebugger.info(debuggerName + " debugger is now loaded ! [Look at debug.yml for configuration]");
         }
         return loadedDebugger.get(debuggerName);
     }

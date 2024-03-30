@@ -26,7 +26,7 @@ public class CommandManagerImpl implements CommandManager<ErisCore> {
 
     }
 
-    public void unRegisterCommand(String commandName) {
+    public void unregisterCommand(String commandName) {
         ErisCommand foundCommand = registeredCommand.get(commandName);
         if(foundCommand == null) {
             ErisCore.getDebugger().warning("Unable to find " + commandName + " command to unregister it !");

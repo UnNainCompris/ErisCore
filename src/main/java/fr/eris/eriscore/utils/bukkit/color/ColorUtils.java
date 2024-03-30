@@ -7,4 +7,8 @@ public class ColorUtils {
         return ChatColor.translateAlternateColorCodes(
                 '&', toTranslate);
     }
+
+    public static String stripColor(String toTranslate) {
+        return ChatColor.stripColor(toTranslate);
+    }
 }

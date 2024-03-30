@@ -19,29 +19,10 @@ public class LanguageManagerImpl implements LanguageManager<ErisCore> {
     @Getter @Setter private ErisCore parent;
 
     public void start() {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     }
 
     public void stop() {
 
-    }
-
-    public void testThings() {
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
-        System.out.println("REOUJFGHZERIOUFHZEIYFH");
     }
 
     public <T extends Language> T getLanguage(String languageName, Class<T> languageType) {

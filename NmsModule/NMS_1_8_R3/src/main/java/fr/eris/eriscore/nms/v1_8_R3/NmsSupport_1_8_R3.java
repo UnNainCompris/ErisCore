@@ -17,5 +17,4 @@ public class NmsSupport_1_8_R3 implements NmsSupport {
             throw new RuntimeException(e);
         }
     }
-
 }

@@ -18,13 +18,13 @@ public class NmsSupportManagerImpl implements NmsSupportManager<ErisCore> {
 
     @Override
     public void findNmsSupport() {
-        ErisCore.getDebugger().info("Loading NmsSupport");
+        Bukkit.getLogger().info("Loading NmsSupport");
         serverNmsVersion = findVersion(parent.getServer().getBukkitVersion());
         if(serverNmsVersion == VersionImpl.NOT_FOUND) {
-            ErisCore.getDebugger().severe("No NmsSupport was found. Stopping the plugin...");
+            Bukkit.getLogger().severe("No NmsSupport was found. Stopping the plugin...");
             Bukkit.getServer().getPluginManager().disablePlugin(parent);
         } else {
-            ErisCore.getDebugger().info("NmsSupport version found: " +
+            Bukkit.getLogger().info("NmsSupport version found: " +
                     serverNmsVersion.name() + " {" + serverNmsVersion.getVersionValue() + "}");
         }
         nmsSupport = serverNmsVersion.buildNmsSupport();

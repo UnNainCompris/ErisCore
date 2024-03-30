@@ -33,6 +33,7 @@ public class YamlDebuggerConfig extends IData {
             dataDocument.set(debuggerName.toLowerCase() + "." + type.name().toLowerCase() + ".typeDisplay", type.getDisplay());
             dataDocument.set(debuggerName.toLowerCase() + "." + type.name().toLowerCase() + ".enabled", true);
         }
+        save();
     }
 
     public void saveData() {

@@ -4,7 +4,9 @@ import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.api.manager.debugger.object.DebugType;
 import fr.eris.eriscore.api.manager.debugger.object.DebugTypeConfig;
 import fr.eris.eriscore.api.manager.debugger.object.Debugger;
+import fr.eris.eriscore.api.manager.nms.object.Version;
 import fr.eris.eriscore.manager.debugger.config.YamlDebuggerConfig;
+import fr.eris.eriscore.manager.nms.object.VersionImpl;
 import fr.eris.eriscore.utils.bukkit.color.ColorUtils;
 import lombok.Getter;
 
@@ -49,9 +51,9 @@ public class DebuggerImpl implements Debugger {
         if(!enabled || !config.isEnabled) return;
         ErisCore.getInstance().getServer().getConsoleSender().sendMessage(
                 ColorUtils.translateColor(
-                        config.format.replace("%prefix%", prefix)
-                                .replace("%message%", message)
-                                .replace("%type%", config.typeDisplay)));
+                        config.format.trim().replace("%prefix%", prefix.trim())
+                                .replace("%message%", message.trim())
+                                .replace("%type%", config.typeDisplay.trim())));
     }
 
     public void info(String message) {
