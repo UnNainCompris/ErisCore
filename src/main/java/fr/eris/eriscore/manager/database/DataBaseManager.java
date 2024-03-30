@@ -5,15 +5,18 @@ import fr.eris.eriscore.manager.database.database.DataBase;
 import fr.eris.eriscore.manager.database.database.object.DataBaseCredential;
 import fr.eris.eriscore.manager.database.database.object.DataBaseType;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
-import fr.eris.eriscore.manager.utils.Manager;
+import fr.eris.eriscore.api.manager.utils.Manager;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseManager extends Manager<ErisCore> {
+public class DataBaseManager implements Manager<ErisCore> {
     // every static method to prevent the access of other manager to create error !
     private static final List<DataBase<?>> loadedDatabase = new ArrayList<>();
+    @Getter @Setter private ErisCore parent;
 
     public void start() {
     }

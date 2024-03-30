@@ -1,6 +1,6 @@
 package fr.eris.eriscore.nms.v1_20_R1;
 
-import fr.eris.eriscore.manager.nms.object.NmsSupport;
+import fr.eris.eriscore.api.manager.nms.object.NmsSupport;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 

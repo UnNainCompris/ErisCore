@@ -1,11 +1,10 @@
 package fr.eris.eriscore.manager.command.object;
 
 import fr.eris.eriscore.ErisCore;
-import fr.eris.eriscore.manager.command.object.arguments.IErisCommandArgument;
-import fr.eris.eriscore.manager.commands.object.ErisCommand;
-import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
-import fr.eris.eriscore.manager.commands.object.error.ExecutionError;
-import fr.eris.eriscore.manager.debugger.object.Debugger;
+import fr.eris.eriscore.api.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.api.manager.commands.object.argument.ErisCommandArgument;
+import fr.eris.eriscore.api.manager.commands.object.error.ExecutionError;
+import fr.eris.eriscore.api.manager.debugger.object.Debugger;
 import fr.eris.eriscore.utils.storage.Tuple;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
@@ -31,10 +30,17 @@ public abstract class IErisCommand extends BukkitCommand implements ErisCommand 
         setPermission(permission == null ? "" : permission);
         this.availableSender = availableSender;
 
-        for(ErisCommand command : registerSubCommand())
-            addSubcommand(command);
-        for(ErisCommandArgument<?> commandArgument : registerCommandArgument())
-            addCommandArgument(commandArgument);
+        Collection<ErisCommand> subcommands = registerSubCommand();
+        if(subcommands != null) {
+            for (ErisCommand subcommand : subcommands)
+                addSubcommand(subcommand);
+        }
+
+        Collection<ErisCommandArgument<?>> commandArguments = registerCommandArgument();
+        if(commandArguments != null) {
+            for (ErisCommandArgument<?> commandArgument : commandArguments)
+                addCommandArgument(commandArgument);
+        }
 
         validateCommandArguments();
     }
@@ -43,7 +49,7 @@ public abstract class IErisCommand extends BukkitCommand implements ErisCommand 
         for(ErisCommandArgument<?> entry : registeredArgument) {
             if(entry.isNullable()) {
                 if(registeredArgument.indexOf(entry) != registeredArgument.size() - 1) {
-                    Debugger.getDebugger().severe("An argument that is null was found but he is not at the end !");
+                    ErisCore.getDebugger().severe("An argument that is null was found but he is not at the end !");
                     return;
                 }
             }
@@ -64,7 +70,7 @@ public abstract class IErisCommand extends BukkitCommand implements ErisCommand 
 
     public void addSubcommand(ErisCommand newSubcommand) {
         if(newSubcommand.isSubcommand()) {
-            Debugger.getDebugger().severe("Try to register a command as subcommand that " +
+            ErisCore.getDebugger().severe("Try to register a command as subcommand that " +
                     "is already a subcommand ! {" + newSubcommand.getName() + "}");
             return;
         }
@@ -74,7 +80,7 @@ public abstract class IErisCommand extends BukkitCommand implements ErisCommand 
 
     public void addCommandArgument(ErisCommandArgument<?> newCommandArgument) {
         if(newCommandArgument.getParentCommand() != null) {
-            Debugger.getDebugger().severe("Try to register a command argument that " +
+            ErisCore.getDebugger().severe("Try to register a command argument that " +
                     "is already a register ! {" + newCommandArgument.getName() + "}");
             return;
         }

@@ -1,6 +1,6 @@
 package fr.eris.eriscore.manager.command.object.arguments;
 
-import fr.eris.eriscore.manager.commands.object.argument.choice.ArgumentChoice;
+import fr.eris.eriscore.api.manager.commands.object.argument.choice.ArgumentChoice;
 import fr.eris.eriscore.utils.list.ListUtils;
 import org.bukkit.command.CommandSender;
 

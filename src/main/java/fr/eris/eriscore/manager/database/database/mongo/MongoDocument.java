@@ -1,10 +1,8 @@
 package fr.eris.eriscore.manager.database.database.mongo;
 
-import com.mongodb.client.MongoDatabase;
 import fr.eris.eriscore.manager.database.database.object.DataBaseDocument;
 import fr.eris.eriscore.manager.database.execption.ErisDatabaseException;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import java.util.Date;
 

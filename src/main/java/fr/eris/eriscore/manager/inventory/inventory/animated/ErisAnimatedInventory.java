@@ -1,6 +1,5 @@
 package fr.eris.eriscore.manager.inventory.inventory.animated;
 
-import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventory;
 import fr.eris.eriscore.manager.inventory.inventory.ErisInventoryHolder;
 import fr.eris.eriscore.manager.inventory.inventory.animated.animation.IAnimation;
@@ -10,7 +9,6 @@ import fr.eris.eriscore.utils.bukkit.item.ItemBuilder;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,8 +1,8 @@
 package fr.eris.eriscore.manager.command.object.arguments;
 
-import fr.eris.eriscore.manager.commands.object.ErisCommand;
-import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
-import fr.eris.eriscore.manager.commands.object.argument.choice.ArgumentChoice;
+import fr.eris.eriscore.api.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.api.manager.commands.object.argument.ErisCommandArgument;
+import fr.eris.eriscore.api.manager.commands.object.argument.choice.ArgumentChoice;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;

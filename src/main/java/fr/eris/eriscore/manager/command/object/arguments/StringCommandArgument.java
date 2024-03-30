@@ -1,10 +1,7 @@
 package fr.eris.eriscore.manager.command.object.arguments;
 
-import fr.eris.eriscore.manager.commands.object.argument.ErisCommandArgument;
-import fr.eris.eriscore.manager.commands.object.argument.choice.ArgumentChoice;
+import fr.eris.eriscore.api.manager.commands.object.argument.choice.ArgumentChoice;
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public class StringCommandArgument extends IErisCommandArgument<String> {
 

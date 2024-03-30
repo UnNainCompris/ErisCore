@@ -2,6 +2,7 @@ package fr.eris.eriscore.utils.bukkit.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemBuilder {
 
@@ -32,5 +33,21 @@ public class ItemBuilder {
     public ItemBuilder setAmount(int amount) {
         itemStack.setAmount(amount);
         return this;
+    }
+
+    public ItemBuilder setCustomModelData(int modelData) {
+        updateMeta((meta) -> meta.setCustomModelData(modelData));
+        return this;
+    }
+
+    private ItemBuilder updateMeta(MetaUpdater updater) {
+        ItemMeta currentItemMeta = itemStack.getItemMeta();
+        updater.update(currentItemMeta);
+        itemStack.setItemMeta(currentItemMeta);
+        return this;
+    }
+
+    private interface MetaUpdater {
+        void update(ItemMeta meta);
     }
 }

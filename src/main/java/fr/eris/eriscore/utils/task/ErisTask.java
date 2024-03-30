@@ -2,7 +2,6 @@ package fr.eris.eriscore.utils.task;
 
 import fr.eris.eriscore.ErisCore;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ErisTask extends BukkitRunnable {

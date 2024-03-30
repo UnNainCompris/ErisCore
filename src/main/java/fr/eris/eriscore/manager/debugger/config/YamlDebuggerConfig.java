@@ -1,7 +1,6 @@
 package fr.eris.eriscore.manager.debugger.config;
 
-import fr.eris.eriscore.manager.config.object.yaml.IYamlConfig;
-import fr.eris.eriscore.manager.debugger.object.DebugType;
+import fr.eris.eriscore.api.manager.debugger.object.DebugType;
 import fr.eris.eriscore.utils.data.IData;
 import fr.eris.eriscore.utils.file.FileCache;
 import fr.eris.eriscore.utils.file.FileUtils;

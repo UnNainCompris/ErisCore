@@ -1,10 +1,7 @@
 package fr.eris.eriscore.commands.inventory;
 
 import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimatedInventory;
-import fr.eris.eriscore.utils.bukkit.item.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.Random;

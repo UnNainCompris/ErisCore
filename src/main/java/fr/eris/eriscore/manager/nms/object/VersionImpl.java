@@ -1,5 +1,7 @@
 package fr.eris.eriscore.manager.nms.object;
 
+import fr.eris.eriscore.api.manager.nms.object.NmsSupport;
+import fr.eris.eriscore.api.manager.nms.object.Version;
 import fr.eris.eriscore.nms.v1_20_R1.NmsSupport_1_20_R1;
 import fr.eris.eriscore.nms.v1_8_R3.NmsSupport_1_8_R3;
 import lombok.Getter;

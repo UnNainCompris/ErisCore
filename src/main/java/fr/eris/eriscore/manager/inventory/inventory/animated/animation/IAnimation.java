@@ -1,7 +1,5 @@
 package fr.eris.eriscore.manager.inventory.inventory.animated.animation;
 
-import fr.eris.eriscore.manager.inventory.inventory.ErisInventory;
-import fr.eris.eriscore.manager.inventory.inventory.animated.AnimationInventoryTask;
 import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimatedInventory;
 import fr.eris.eriscore.manager.inventory.inventory.animated.ErisAnimationData;
 import fr.eris.eriscore.manager.inventory.item.ClickAction;

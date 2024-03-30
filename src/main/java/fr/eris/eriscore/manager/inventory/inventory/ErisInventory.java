@@ -1,7 +1,6 @@
 package fr.eris.eriscore.manager.inventory.inventory;
 
 import fr.eris.eriscore.ErisCore;
-import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.InventoryManager;
 import fr.eris.eriscore.manager.inventory.item.ClickAction;
 import fr.eris.eriscore.manager.inventory.item.ErisInventoryItem;

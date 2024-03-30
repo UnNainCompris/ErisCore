@@ -1,6 +1,5 @@
 package fr.eris.eriscore.manager.inventory.inventory.animated;
 
-import fr.eris.eriscore.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.inventory.inventory.animated.animation.IAnimation;
 import fr.eris.eriscore.utils.task.ErisTask;
 

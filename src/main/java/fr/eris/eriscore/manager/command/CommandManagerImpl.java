@@ -2,9 +2,9 @@ package fr.eris.eriscore.manager.command;
 
 import fr.eris.eriscore.ErisCore;
 import fr.eris.eriscore.manager.command.object.IErisCommand;
-import fr.eris.eriscore.manager.commands.CommandManager;
-import fr.eris.eriscore.manager.commands.object.ErisCommand;
-import fr.eris.eriscore.manager.debugger.object.Debugger;
+import fr.eris.eriscore.api.manager.commands.CommandManager;
+import fr.eris.eriscore.api.manager.commands.object.ErisCommand;
+import fr.eris.eriscore.api.manager.debugger.object.Debugger;
 import fr.eris.eriscore.manager.nms.NmsSupportManagerImpl;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class CommandManagerImpl implements CommandManager<ErisCore> {
     private final HashMap<String, ErisCommand> registeredCommand = new HashMap<>();
 
     public void start() {
-        commandMap = NmsSupportManagerImpl.getNmsSupport().retrieveCommandMap();
+        commandMap = ErisCore.getNmsSupportManager().getNmsSupport().retrieveCommandMap();
     }
 
     public void stop() {
@@ -29,7 +29,7 @@ public class CommandManagerImpl implements CommandManager<ErisCore> {
     public void unRegisterCommand(String commandName) {
         ErisCommand foundCommand = registeredCommand.get(commandName);
         if(foundCommand == null) {
-            Debugger.getDebugger().warning("Unable to find " + commandName + " command to unregister it !");
+            ErisCore.getDebugger().warning("Unable to find " + commandName + " command to unregister it !");
             return;
         }
         foundCommand.unregisterCommand();
@@ -41,11 +41,11 @@ public class CommandManagerImpl implements CommandManager<ErisCore> {
 
     public void registerCommand(ErisCommand newCommandToRegister) {
         if(registeredCommand.containsKey(newCommandToRegister.getName().toLowerCase())) {
-            Debugger.getDebugger().severe("Two commannd with the same name try to get registered ! " +
+            ErisCore.getDebugger().severe("Two commannd with the same name try to get registered ! " +
                     "{" + newCommandToRegister.getName().toLowerCase() + "}");
             return;
         }
-        Debugger.getDebugger().info("Registering new Command ! {" + newCommandToRegister.getName() + "}");
+        ErisCore.getDebugger().info("Registering new Command ! {" + newCommandToRegister.getName() + "}");
         commandMap.register("eriscore", (IErisCommand)newCommandToRegister);
     }
 

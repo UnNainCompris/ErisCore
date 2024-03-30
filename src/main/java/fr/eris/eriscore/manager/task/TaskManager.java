@@ -1,9 +1,8 @@
 package fr.eris.eriscore.manager.task;
 
-import fr.eris.eriscore.ErisCore;
-import fr.eris.eriscore.manager.utils.Manager;
+import fr.eris.eriscore.api.manager.utils.Manager;
 
-public class TaskManager extends Manager<ErisCore> {
+public class TaskManager {
     
     public void start() {
 
